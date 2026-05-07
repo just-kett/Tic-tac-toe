@@ -122,7 +122,7 @@ bool isEmptyHead(const char board[][BOARD_N_MAX], const int size, int x, int y, 
  * NOTE:
  *   - Có thể dùng cho cả Tic-tac-toe và Gomoku
  */
-bool checkWin(char board[][BOARD_N_MAX], const int size, const char symbol, const int goal, EndRule rule = EndRule::OPEN_TWO);
+bool checkWin(const char board[][BOARD_N_MAX], const int size, const char symbol, const int goal, EndRule rule = EndRule::OPEN_TWO);
 
 /**
  * Mô tả:
