@@ -159,7 +159,6 @@ bool Logic::checkDraw(char board[][BOARD_N_MAX], const int size) {
 }
 
 /**
- * (UNFINISHED)
  * Mô tả: Lấy đường thắng nếu tồn tại.
  * Đầu vào: board, size, symbol, goal, rule
  * Đầu ra: optional WinLine
@@ -175,56 +174,68 @@ std::optional<WinLine> Logic::getWinLine(
     EndRule rule) {
     int dx[4] = {1, 0, 1, 1};
     int dy[4] = {0, 1, 1, -1};
-    WinLine win;
-    if (checkWin(board, size, symbol, goal, rule)) {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (board[i][j] == symbol) {
-                    for (int k = 0; k < 4; k++) {
-                        int len = 1;
-                        int nx = i + dx[k];
-                        int ny = j + dy[k];
-                        int px = i - dx[k];
-                        int py = j - dy[k];
 
-                        while (nx >= 0 && ny >= 0 && nx < size && ny < size && board[nx][ny] == symbol) {
-                            len++;
-                            nx += dx[k];
-                            ny += dy[k];
-                        }
-                        while (px >= 0 && py >= 0 && px < size && py < size && board[px][py] == symbol) {
-                            len++;
-                            px -= dx[k];
-                            py -= dy[k];
-                        }
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            if (board[i][j] != symbol) {
+                continue;
+            }
 
-                        bool first_open = px < 0 || py < 0 || px >= size || py >= size || board[px][py] == symbol || board[px][py] == '-';
-                        bool last_open = nx < 0 || ny < 0 || nx >= size || ny >= size || board[nx][ny] == symbol || board[nx][ny] == '-';
-                        
-                        if (len >= goal + 2) {
-                            win.cells = {
-                                {px + dx[k], py + dy[k]},
-                                {nx - dx[k], ny - dy[k]}
-                            };
-                        }
-                        if (len >= goal && len < goal + 2 && rule == EndRule::OPEN_ONE) {
-                            if (first_open) {
-                                win.cells = {
-                                    {px, py},
-                                    {nx - dx[k], ny - dy[k]}
-                                };
-                            }
-                            if (last_open) {
-                                win.cells = {
-                                    {px + dx[k], py + dy[k]},
-                                    {nx, ny}
-                                };
-                            }
-                        }
+            for (int k = 0; k < 4; k++) {
+                int len = 1;
+                int nx = i + dx[k];
+                int ny = j + dy[k];
+                int px = i - dx[k];
+                int py = j - dy[k];
+
+                while (nx >= 0 && ny >= 0 && nx < size && ny < size && board[nx][ny] == symbol) {
+                    len++;
+                    nx += dx[k];
+                    ny += dy[k];
+                }
+                while (px >= 0 && py >= 0 && px < size && py < size && board[px][py] == symbol) {
+                    len++;
+                    px -= dx[k];
+                    py -= dy[k];
+                }
+
+                bool first_open = px < 0 || py < 0 || px >= size || py >= size || board[px][py] == symbol || board[px][py] == '-';
+                bool last_open = nx < 0 || ny < 0 || nx >= size || ny >= size || board[nx][ny] == symbol || board[nx][ny] == '-';
+
+                bool winning_line = false;
+                if (len >= goal + 2) {
+                    winning_line = true;
+                } else if (len >= goal) {
+                    if (rule == EndRule::NONE) {
+                        winning_line = true;
+                    } else if (rule == EndRule::OPEN_ONE) {
+                        winning_line = first_open || last_open;
+                    } else if (rule == EndRule::OPEN_TWO) {
+                        winning_line = first_open && last_open;
                     }
                 }
+
+                if (!winning_line) {
+                    continue;
+                }
+
+                WinLine win;
+                int start_x = px + dx[k];
+                int start_y = py + dy[k];
+                int end_x = nx - dx[k];
+                int end_y = ny - dy[k];
+
+                for (int cx = start_x, cy = start_y;; cx += dx[k], cy += dy[k]) {
+                    win.cells.emplace_back(cx, cy);
+                    if (cx == end_x && cy == end_y) {
+                        break;
+                    }
+                }
+
+                return win;
             }
         }
     }
+
     return std::nullopt;
 }

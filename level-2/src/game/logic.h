@@ -8,6 +8,7 @@
 /* ---------- Importing ---------- */
 
 #include <optional>
+#include <vector>
 
 #include "setup.h"
 
