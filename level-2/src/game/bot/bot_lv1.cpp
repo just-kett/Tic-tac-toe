@@ -67,7 +67,7 @@ pII BotLevel1::getMove(char board[][BOARD_N_MAX], const int size, const int goal
     // TODO: có thể mở rộng logic trong tương lai
     // dùng hàm random_pick(...)
     throw NotImplementedException();
-    return {0, 0};
+    return random_pick(board, size);
 }
 
 /**
@@ -91,6 +91,22 @@ pII BotLevel1::getMove(char board[][BOARD_N_MAX], const int size, const int goal
  */
 pII BotLevel1::random_pick(char board[][BOARD_N_MAX], const int size) {
     // TODO: implement random pick
+    std::vector<std::vector<int>> emptyCells;
+
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            if (board[i][j] == '-') {
+                emptyCells.push_back({i, j});
+            }
+        }
+    }
+    int row, col;
+
+    srand(time(NULL));
+    int index = rand() % emptyCells.size();
+
+    row = emptyCells[index][0];
+    col = emptyCells[index][1];
     throw NotImplementedException();
-    return {-1, -1};
+    return {row, col};
 }
