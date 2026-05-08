@@ -55,7 +55,7 @@ class BotLevel3 : public BotLevel2 {
      * Tác dụng phụ:
      *   - Không có
      */
-    pII hard_level(char board[][BOARD_N_MAX], const int size, const int goal);
+    pII hard_level(char board[][BOARD_N_MAX], const int size, const int goal, const char botSymbol, const char playerSymbol);
 
    public:
     /**

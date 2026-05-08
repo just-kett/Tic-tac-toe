@@ -33,6 +33,12 @@
  *   - Đây là bot trung cấp, chưa dùng minimax
  *   - Logic chủ yếu dựa trên kiểm tra cục bộ
  */
+
+namespace helper {
+    bool WinMove(char board[][BOARD_N_MAX], const int x, const int y, const int size, const int goal, const char symbol);
+    int eval_score (char board[][BOARD_N_MAX], const int x, const int y, const int size, const int goal, const char symbol, const char op_symbol);
+}
+
 class BotLevel2 : public BotLevel1 {
    protected:
     /**
