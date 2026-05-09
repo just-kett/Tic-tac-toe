@@ -100,6 +100,11 @@ pII BotLevel1::random_pick(char board[][BOARD_N_MAX], const int size) {
             }
         }
     }
+
+    if (emptyCells.empty()) {
+        return {-1, -1};
+    }
+
     int row, col;
 
     srand(time(NULL));
@@ -107,6 +112,5 @@ pII BotLevel1::random_pick(char board[][BOARD_N_MAX], const int size) {
 
     row = emptyCells[index][0];
     col = emptyCells[index][1];
-    throw NotImplementedException();
     return {row, col};
 }
