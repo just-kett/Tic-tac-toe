@@ -55,6 +55,8 @@ pII BotLevel2::getMove(char board[][BOARD_N_MAX], const int size, const int goal
  *   - Bước 2: kiểm tra nước chặn
  *   - Bước 3: chọn random nếu không có
  */
+namespace helper {
+
 bool WinMove(char board[][BOARD_N_MAX], const int x, const int y, const int size, const int goal, const char symbol) {
     board[x][y] = symbol;
     bool win = Logic::checkWin(board, size, symbol, goal);
@@ -108,6 +110,8 @@ int eval_score (char board[][BOARD_N_MAX], const int x, const int y, const int s
     return score; 
 }
 
+}  // namespace helper
+
 pII BotLevel2::simple_heuristic(char board[][BOARD_N_MAX], const int size, const int goal, const char botSymbol, const char playerSymbol) {
     std::vector<std::pair<double, std::pair<int, int>>> move;
     int row = -1;
@@ -116,15 +120,15 @@ pII BotLevel2::simple_heuristic(char board[][BOARD_N_MAX], const int size, const
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             if (board[i][j] == '-') {
-                if (WinMove(board, i, j, size, goal, botSymbol)) {
+                if (helper::WinMove(board, i, j, size, goal, botSymbol)) {
                     return {i, j};
                 }
             }
             if (board[i][j] == '-') {
-                int atk_score = eval_score(board, i, j, size, goal, botSymbol, playerSymbol);
-                int def_score = eval_score(board, i, j , size, goal, playerSymbol, botSymbol);
+                int atk_score = helper::eval_score(board, i, j, size, goal, botSymbol, playerSymbol);
+                int def_score = helper::eval_score(board, i, j , size, goal, playerSymbol, botSymbol);
                 double score = atk_score + 0.7*def_score;
-                if (WinMove(board, i, j, size, goal, playerSymbol)) {
+                if (helper::WinMove(board, i, j, size, goal, playerSymbol)) {
                     score += 10000;
                 }
                 move.push_back({score, {i, j}});
