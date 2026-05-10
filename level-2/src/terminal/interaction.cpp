@@ -10,6 +10,7 @@
 #include <chrono>
 #include <format>
 #include <iostream>
+#include <limits>
 #include <thread>
 
 #include "../utils/logger.h"
@@ -98,7 +99,6 @@ bool TerminalInteraction::validateInput(const std::string& input) {
             return false;
         }
     }
-    throw NotImplementedException();
     return true;
 }
 
@@ -131,7 +131,6 @@ bool TerminalInteraction::getInput(int* val) {
     catch (const std::invalid_argument&) {
         return false;
     }
-    throw NotImplementedException();
     return true;
 }
 
@@ -146,8 +145,16 @@ bool TerminalInteraction::getInput(int* val) {
  *   - Trường hợp biên: buffer input còn dữ liệu.
  */
 void TerminalInteraction::pause(int timeout) {
-    throw NotImplementedException();
-    return;
+    if (timeout > 0) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
+        return;
+    }
+    std::string line;
+    if (std::getline(std::cin, line) && line.empty()) {
+    } else if (!std::cin.good() && !std::cin.eof()) {
+        std::cin.clear();
+        std::getline(std::cin, line);
+    }
 }
 
 /**
@@ -164,10 +171,9 @@ bool TerminalInteraction::selectSize(int* size) {
     if (!getInput(size)) {
         return false;
     }
-    if (*size < 3 || *size > BOARD_N_MAX) {
+    if (*size < BOARD_N_MIN || *size > BOARD_N_MAX) {
         return false;
     }
-    throw NotImplementedException();
     return true;
 }
 
@@ -185,10 +191,9 @@ bool TerminalInteraction::selectGoal(int* goal, const int size) {
     if (!getInput(goal)) {
         return false;
     }
-    if (*goal < 3 || *goal > BOARD_N_MAX) {
+    if (*goal < BOARD_N_MIN || *goal > size) {
         return false;
     }
-    throw NotImplementedException();
     return true;
 }
 
@@ -221,7 +226,6 @@ bool TerminalInteraction::selectGameMode(GameMode* mode) {
             *mode = GameMode::INVALID_MODE;
             return false;
     }
-    throw NotImplementedException();
 }
 
 /**
@@ -253,7 +257,6 @@ bool TerminalInteraction::selectBotLevel(BotLevel* levels, const int index) {
         default:
             return false;
     }
-    throw NotImplementedException();
 }
 
 /**
@@ -273,7 +276,6 @@ bool TerminalInteraction::getPlayerMove(int* row, int* col) {
     if (!getInput(col)) {
         return false;
     }
-    throw NotImplementedException();
     return true;
 }
 
