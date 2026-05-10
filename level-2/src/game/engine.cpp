@@ -325,12 +325,16 @@ GameResult Engine::playGame() {
             col = point.second;
         } else {
             // human input
-            bool is_valid = true;
+            bool is_valid = false;
             do {
                 if (config->interactive) iRenderer->showSelectMenu(SelectType::PLAYER_UI);
-                iInteraction->getPlayerMove(&row, &col);
-                is_valid = Logic::isValidMove(gameSetup.board, gameSetup.size, row, col);
+                if (!iInteraction->getPlayerMove(&row, &col)) {
+                    if (config->interactive) iRenderer->showInvalidMove();
+                    is_valid = false;
+                    continue;
+                }
 
+                is_valid = Logic::isValidMove(gameSetup.board, gameSetup.size, row, col);
                 if (!is_valid) {
                     if (config->interactive) iRenderer->showInvalidMove();
                 }
