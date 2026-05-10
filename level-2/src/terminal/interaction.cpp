@@ -93,11 +93,13 @@ void TerminalInteraction::closeInteraction() {
  *   - Trường hợp biên: input rỗng hoặc chứa ký tự đặc biệt.
  */
 bool TerminalInteraction::validateInput(const std::string& input) {
-    // TODO: Kiểm tra chuỗi rỗng
-    // TODO: Duyệt từng ký tự để đảm bảo toàn bộ là chữ số
-    // TODO: Trả về true nếu hợp lệ, ngược lại false
+    for (char i : input) {
+        if (not std::isdigit(i)) {
+            return false;
+        }
+    }
     throw NotImplementedException();
-    return false;
+    return true;
 }
 
 /**
@@ -112,12 +114,25 @@ bool TerminalInteraction::validateInput(const std::string& input) {
  *   - Trường hợp biên: input không phải số hoặc lỗi chuyển đổi.
  */
 bool TerminalInteraction::getInput(int* val) {
-    // TODO: Đọc dữ liệu dạng chuỗi từ std::cin
-    // TODO: Validate input
-    // TODO: Chuyển đổi sang int và gán vào *val
-    // TODO: Xử lý exception nếu có
+    std::string input;
+
+    if (!(std::cin >> input)) {
+        return false;
+    }
+    if (input.empty() || !validateInput(input)) {
+        return false;
+    }
+    try {
+        *val = std::stoi(input);
+    }
+    catch (const std::out_of_range&) {
+        return false;
+    }
+    catch (const std::invalid_argument&) {
+        return false;
+    }
     throw NotImplementedException();
-    return false;
+    return true;
 }
 
 /**
@@ -131,7 +146,6 @@ bool TerminalInteraction::getInput(int* val) {
  *   - Trường hợp biên: buffer input còn dữ liệu.
  */
 void TerminalInteraction::pause(int timeout) {
-    // TODO: Xử lý pause theo chế độ interactive hoặc delay
     throw NotImplementedException();
     return;
 }
@@ -147,10 +161,14 @@ void TerminalInteraction::pause(int timeout) {
  *   - Trường hợp biên: giá trị ngoài phạm vi.
  */
 bool TerminalInteraction::selectSize(int* size) {
-    // TODO: Đọc input size
-    // TODO: Validate range hợp lệ
+    if (!getInput(size)) {
+        return false;
+    }
+    if (*size < 3 || *size > BOARD_N_MAX) {
+        return false;
+    }
     throw NotImplementedException();
-    return false;
+    return true;
 }
 
 /**
@@ -164,10 +182,14 @@ bool TerminalInteraction::selectSize(int* size) {
  *   - Trường hợp biên: goal không hợp lệ.
  */
 bool TerminalInteraction::selectGoal(int* goal, const int size) {
-    // TODO: Đọc input goal
-    // TODO: Validate điều kiện goal
+    if (!getInput(goal)) {
+        return false;
+    }
+    if (*goal < 3 || *goal > BOARD_N_MAX) {
+        return false;
+    }
     throw NotImplementedException();
-    return false;
+    return true;
 }
 
 /**
@@ -181,10 +203,25 @@ bool TerminalInteraction::selectGoal(int* goal, const int size) {
  *   - Trường hợp biên: giá trị ngoài [1,3].
  */
 bool TerminalInteraction::selectGameMode(GameMode* mode) {
-    // TODO: Đọc input mode
-    // TODO: Mapping sang enum tương ứng
+    int choice;
+    if (!getInput(&choice)) {
+        return false;
+    }
+    switch (choice) {
+        case 1:
+            *mode = GameMode::PVP;
+            return true;
+        case 2:
+            *mode = GameMode::PVE;
+            return true;
+        case 3:
+            *mode = GameMode::EVE;
+            return true;
+        default:
+            *mode = GameMode::INVALID_MODE;
+            return false;
+    }
     throw NotImplementedException();
-    return false;
 }
 
 /**
@@ -199,11 +236,24 @@ bool TerminalInteraction::selectGameMode(GameMode* mode) {
  *   - Trường hợp biên: index ngoài phạm vi hoặc level sai.
  */
 bool TerminalInteraction::selectBotLevel(BotLevel* levels, const int index) {
-    // TODO: Đọc input bot level
-    // TODO: Validate index
-    // TODO: Mapping sang BotLevel
+    int choice;
+    if (!getInput(&choice)) {
+        return false;
+    }
+    switch (choice) {
+        case 1:
+            levels[index] = BotLevel::EASY;
+            return true;
+        case 2:
+            levels[index] = BotLevel::MEDIUM;
+            return true;
+        case 3:
+            levels[index] = BotLevel::HARD;
+            return true;
+        default:
+            return false;
+    }
     throw NotImplementedException();
-    return false;
 }
 
 /**
@@ -217,9 +267,14 @@ bool TerminalInteraction::selectBotLevel(BotLevel* levels, const int index) {
  *   - Trường hợp biên: input không hợp lệ.
  */
 bool TerminalInteraction::getPlayerMove(int* row, int* col) {
-    // TODO: Đọc row và col
+    if (!getInput(row)) {
+        return false;
+    }
+    if (!getInput(col)) {
+        return false;
+    }
     throw NotImplementedException();
-    return false;
+    return true;
 }
 
 /**
