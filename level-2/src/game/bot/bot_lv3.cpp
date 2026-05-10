@@ -239,5 +239,4 @@ pII BotLevel3::hard_level(char board[][BOARD_N_MAX], const int size, const int g
     }
     if (row != -1) return {row, col};
     return random_pick(board, size);
-    throw NotImplementedException();
 }

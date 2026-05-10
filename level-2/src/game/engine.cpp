@@ -330,7 +330,7 @@ GameResult Engine::playGame() {
                 if (config->interactive) iRenderer->showSelectMenu(SelectType::PLAYER_UI);
                 if (!iInteraction->getPlayerMove(&row, &col)) {
                     if (config->interactive) iRenderer->showInvalidMove();
-                    is_valid = false;
+                    is_valid = true;
                     continue;
                 }
 

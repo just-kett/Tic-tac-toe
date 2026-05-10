@@ -66,7 +66,6 @@ BotLevel1::~BotLevel1() {
 pII BotLevel1::getMove(char board[][BOARD_N_MAX], const int size, const int goal) {
     // TODO: có thể mở rộng logic trong tương lai
     // dùng hàm random_pick(...)
-    throw NotImplementedException();
     return random_pick(board, size);
 }
 

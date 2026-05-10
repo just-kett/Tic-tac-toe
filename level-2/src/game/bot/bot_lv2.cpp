@@ -39,7 +39,6 @@ BotLevel2::~BotLevel2() {
  */
 pII BotLevel2::getMove(char board[][BOARD_N_MAX], const int size, const int goal) {
     // TODO: gọi simple_heuristic với symbol và op_symbol
-    throw NotImplementedException();
     return simple_heuristic(board, size, goal, symbol, op_symbol);
 }
 
@@ -142,6 +141,5 @@ pII BotLevel2::simple_heuristic(char board[][BOARD_N_MAX], const int size, const
     }
 
     if (row != -1) return {row, col};
-    throw NotImplementedException();
     return random_pick(board, size);
 }

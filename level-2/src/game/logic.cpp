@@ -44,7 +44,6 @@ bool Logic::isValidMove(const char board[][BOARD_N_MAX], const int size, const i
     if (board[row][col] != '-') {
         return false;
     }
-    throw NotImplementedException();
     return true;
 }
 
@@ -57,7 +56,6 @@ bool Logic::isValidMove(const char board[][BOARD_N_MAX], const int size, const i
  */
 void Logic::makeMove(char board[][BOARD_N_MAX], const int row, const int col, const char symbol) {
     board[row][col] = symbol;
-    throw NotImplementedException();
 }
 
 /**
@@ -77,7 +75,6 @@ bool Logic::isEmptyHead(const char board[][BOARD_N_MAX], const int size, int x, 
     if (board[x][y] == symbol) {
         return true;
     }
-    throw NotImplementedException();
     return false;
 }
 
@@ -134,7 +131,6 @@ bool Logic::checkWin(const char board[][BOARD_N_MAX], const int size, const char
             }
         }
     }
-    throw NotImplementedException();
     return false;
 }
 
@@ -153,7 +149,6 @@ bool Logic::checkDraw(char board[][BOARD_N_MAX], const int size) {
             }
         }
     }
-    throw NotImplementedException();
     return true;
 }
 

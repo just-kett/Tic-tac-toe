@@ -34,8 +34,6 @@
  *   - Trường hợp biên: level không hợp lệ → trả về nullptr
  */
 Bot* BotFactory::createBot(BotLevel level, const char& symbol) {
-    // TODO: implement factory logic
-    throw NotImplementedException();
 
     switch (level) {
         case BotLevel::EASY:
