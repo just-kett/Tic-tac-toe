@@ -1,0 +1,12 @@
+Tic-tac-toe Game (Version: 0.4.<STUDENT_ID> by baluong.87)
+------------------------------------------------
+[INFO] - [2026-05-11 01:07:56] Logger initialized!
+[INFO] - [2026-05-11 01:07:56] Terminal Renderer initialized!
+[INFO] - [2026-05-11 01:07:56] Terminal Interaction initialized!
+[INFO] - [2026-05-11 01:07:56] Infra initialized!
+[INFO] - [2026-05-11 01:07:56] Engine initializing . . .
+[INFO] - [2026-05-11 01:07:56] Engine initialized!
+[INFO] - [2026-05-11 01:07:56] [Engine] Starting game . . .
+[INFO] - [2026-05-11 01:08:02] Board initialized!
+[INFO] - [2026-05-11 01:08:02] [Engine] Game started!
+[INFO] - [2026-05-11 01:08:02] [Engine] Playing game . . .
