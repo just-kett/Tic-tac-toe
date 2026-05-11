@@ -14,18 +14,7 @@
 /* ---------- Definitions ---------- */
 
 /**
- * Mô tả:
- *   Tạo đối tượng Bot tương ứng với level.
- *
- * Đầu vào:
- *   - level: mức độ bot (EASY, MEDIUM, HARD)
- *   - symbol: ký hiệu của bot ('X' hoặc 'O')
- *
- * Đầu ra:
- *   - Bot*: con trỏ tới bot được tạo (hoặc nullptr nếu không hợp lệ)
- *
- * Tác dụng phụ:
- *   - Cấp phát bộ nhớ động (new)
+
  *
  * TODO:
  *   - Bước 1: Kiểm tra level
