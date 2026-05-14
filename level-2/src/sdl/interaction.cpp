@@ -250,10 +250,10 @@ bool SDLInteraction::askPlayAgain() {
         if (e.type != SDL_KEYDOWN) continue;
 
         switch (e.key.keysym.sym) {
-            case SDLK_r:
+            case SDLK_y:
                 SDL_Delay(600); // pause để thấy showValidSelect
                 return true;
-            case SDLK_ESCAPE:
+            case SDLK_n:
                 return false;  // không ném QuitException — đây là lựa chọn hợp lệ
             default:
                 break;  // bỏ qua phím không liên quan, tiếp tục chờ

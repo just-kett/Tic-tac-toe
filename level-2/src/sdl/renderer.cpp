@@ -378,7 +378,7 @@ void SDLRenderer::showResult(const int winner, const bool is_bot,
     }
 
     drawTextCentered(msg,                    bx, by + 20, bw, msgCol,         fontLarge_);
-    drawTextCentered("Press \"R\" to play again or \"Esc\" to quit", bx, by + 62, bw, COLOR_TEXT_DIM, fontSmall_);
+    drawTextCentered("Press \"Y\" to play again or \"N\" to quit", bx, by + 62, bw, COLOR_TEXT_DIM, fontSmall_);
 
     renderPresent();
 }
