@@ -28,7 +28,14 @@ class SDLRenderer : public I_Renderer {
    private:
     SDL_Window* window = nullptr;      // Con trỏ tới cửa sổ SDL
     SDL_Renderer* renderer = nullptr;  // Context để vẽ (rendering)
-
+    TTF_Font* font = nullptr;
+    TTF_Font* titleFont = nullptr;
+    SDL_Texture* backgroundTexture = nullptr;
+    int screenWidth;
+    int screenHeight;
+    int currentBoardSize;
+    int boardPadding;
+    
     /**
      * Mô tả: Đẩy nội dung đã vẽ lên màn hình (swap buffer).
      * Đầu vào: Không.
@@ -51,6 +58,9 @@ class SDLRenderer : public I_Renderer {
     void drawRect(int x, int y, int w, int h, SDL_Color color, bool filled);
 
    public:
+
+   void updateBackground();
+
     /**
      * Mô tả: Constructor khởi tạo SDLRenderer.
      * Đầu vào: Không.
