@@ -74,7 +74,7 @@ void TerminalRenderer::clearScreen() {
 void TerminalRenderer::showSelectMenu(SelectType selectType, int context) {
     switch (selectType) {
         case SelectType::TITLE_UI:
-            std::cout << std::format(">----- Tic-tac-toe [Console v{}] -----<\n\n", VERSION);
+            std::cout << std::format(">----- Tic-tac-toe [Console v{}] -----<\n", VERSION);
             break;
 
         case SelectType::SIZE_UI:
