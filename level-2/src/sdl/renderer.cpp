@@ -130,10 +130,10 @@ int SDLRenderer::drawText(const std::string& text, int x, int y,
     if (!surface) return 0;
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer_, surface);
     int w = surface->w, h = surface->h;
-    SDL_FreeSurface(surface);
+    SDL_FreeSurface(surface); // Free the surface after creating the texture
     if (!texture) return 0;
     SDL_Rect dst = {x, y, w, h};
-    SDL_RenderCopy(renderer_, texture, nullptr, &dst);
+    SDL_RenderCopy(renderer_, texture, nullptr, &dst); // nullptr -> render entire texture
     SDL_DestroyTexture(texture);
     return w;
 }
@@ -161,7 +161,7 @@ SDLRenderer::BoardLayout SDLRenderer::calcLayout(int size) const {
 /**
  * Mô tả: Vẽ board từ cache.
  *        Được gọi bởi mọi hàm render để đảm bảo board luôn hiển thị.
- *        Thứ tự vẽ: nền → highlight nước cuối → lưới → quân cờ.
+ *        Thứ tự vẽ: nền -> highlight nước cuối -> lưới -> quân cờ.
  */
 void SDLRenderer::drawBoard() {
     if (!boardInitialized_) return;
@@ -197,9 +197,9 @@ void SDLRenderer::drawBoard() {
             char sym = cachedBoard_[r][c];
             if (sym == '\0' || sym == ' ') continue;
 
-            int cx = L.offsetX + c * L.cellSize + L.cellSize / 2;
+            int cx = L.offsetX + c * L.cellSize + L.cellSize / 2; // c for center
             int cy = L.offsetY + r * L.cellSize + L.cellSize / 2;
-            int x1 = L.offsetX + c * L.cellSize + pad;
+            int x1 = L.offsetX + c * L.cellSize + pad; // x1, y1, x2, y2 define the bounding coordinates used to draw the X symbol inside a board cell
             int y1 = L.offsetY + r * L.cellSize + pad;
             int x2 = x1 + L.cellSize - pad * 2;
             int y2 = y1 + L.cellSize - pad * 2;
@@ -221,6 +221,62 @@ void SDLRenderer::drawBoard() {
     }
 }
 
+
+
+
+
+void SDLRenderer::drawPiecesOnly() {
+    if (!boardInitialized_) return;
+
+    BoardLayout L = calcLayout(boardSize_);
+
+    // quân cờ X / O
+    int pad = L.cellSize / 5;
+    for (int r = 0; r < boardSize_; r++) {
+        for (int c = 0; c < boardSize_; c++) {
+            char sym = cachedBoard_[r][c];
+            if (sym == '\0' || sym == ' ') continue;
+
+            int cx = L.offsetX + c * L.cellSize + L.cellSize / 2; // c for center
+            int cy = L.offsetY + r * L.cellSize + L.cellSize / 2;
+            int x1 = L.offsetX + c * L.cellSize + pad; // x1, y1, x2, y2 define the bounding coordinates used to draw the X symbol inside a board cell
+            int y1 = L.offsetY + r * L.cellSize + pad;
+            int x2 = x1 + L.cellSize - pad * 2;
+            int y2 = y1 + L.cellSize - pad * 2;
+
+            if (sym == 'X') {
+                SDL_SetRenderDrawColor(renderer_,
+                    COLOR_X.r, COLOR_X.g, COLOR_X.b, COLOR_X.a);
+                for (int t = -2; t <= 2; t++) {
+                    SDL_RenderDrawLine(renderer_, x1 + t, y1, x2 + t, y2);
+                    SDL_RenderDrawLine(renderer_, x2 + t, y1, x1 + t, y2);
+                }
+            } else if (sym == 'O') {
+                SDL_SetRenderDrawColor(renderer_,
+                    COLOR_O.r, COLOR_O.g, COLOR_O.b, COLOR_O.a);
+                int radius = (L.cellSize / 2) - pad;
+                drawThickCircle(renderer_, cx, cy, radius, 3);
+            }
+        }
+    }
+}
+
+
+void SDLRenderer::drawSidebar() {
+    int sx = screenW_ - SIDEBAR_W;
+    drawRect(sx, 0, SIDEBAR_W, screenH_, COLOR_PANEL, true);
+
+    std::string symbol   = (currentPlayer_ == 0) ? "[ X ]" : "[ O ]";
+    std::string turnText = currentIsBot_
+        ? "Bot's turn"
+        : ("Player " + std::to_string(currentPlayer_ + 1) + "'s turn");
+    SDL_Color col = (currentPlayer_ == 0) ? COLOR_X : COLOR_O;
+
+    drawTextCentered("CURRENT TURN", sx, 75, SIDEBAR_W, COLOR_TEXT_DIM,  fontSmall_);
+    drawTextCentered(symbol,         sx, 110,  SIDEBAR_W, col,             fontLarge_);
+    drawTextCentered(turnText,       sx, 150, SIDEBAR_W, COLOR_TEXT_MAIN, fontMed_);
+}
+
 /* ---------- clearScreen ---------- */
 
 void SDLRenderer::clearScreen() {
@@ -232,7 +288,7 @@ void SDLRenderer::clearScreen() {
 /* ---------- displayBoard ---------- */
 
 /**
- * Mô tả: Cache trạng thái board — không render trực tiếp.
+ * Mô tả: lưu trạng thái board - không render trực tiếp.
  *        Việc render thực sự xảy ra trong showPlayer() cùng một frame.
  */
 void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size) {
@@ -244,18 +300,18 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size) 
             cachedBoard_[r][c] = board[r][c];
 
     // không gọi renderPresent() ở đây
-    // showPlayer() sẽ vẽ toàn bộ frame bao gồm board
+    // showPlayer() sẽ vẽ toàn bộ frame bao gồm board - cập nhật toàn bộ rồi render một lần (tránh thiếu đồng bộ)
 }
 
 /* ---------- showMove ---------- */
 
 /**
  * Mô tả: Lưu vị trí nước đi cuối để highlight.
- *        Không render trực tiếp — showPlayer() sẽ flush frame.
+ *        Không render trực tiếp - showPlayer() sẽ flush frame.
  */
 void SDLRenderer::showMove(const int row, const int col) {
     lastRow_ = row;
-    lastCol_ = col;
+    lastCol_ = col; // These belong to the SDLRenderer object itself, they persist after the function finishes
 }
 
 /* ---------- showPlayer ---------- */
@@ -268,19 +324,10 @@ void SDLRenderer::showPlayer(const int player, const bool is_bot) {
     clearScreen();
     drawBoard();  // board luôn là lớp nền
 
+    currentPlayer_ = player;
+    currentIsBot_  = is_bot;
     // sidebar
-    int sx = screenW_ - SIDEBAR_W;
-    drawRect(sx, 0, SIDEBAR_W, screenH_, COLOR_PANEL, true);
-
-    std::string symbol   = (player == 0) ? "[ X ]" : "[ O ]";
-    std::string turnText = is_bot
-        ? "Bot's turn"
-        : ("Player " + std::to_string(player + 1) + "'s turn");
-    SDL_Color col = (player == 0) ? COLOR_X : COLOR_O;
-
-    drawTextCentered("CURRENT TURN", sx, 30,  SIDEBAR_W, COLOR_TEXT_DIM,  fontSmall_);
-    drawTextCentered(symbol,         sx, 65,  SIDEBAR_W, col,             fontLarge_);
-    drawTextCentered(turnText,       sx, 105, SIDEBAR_W, COLOR_TEXT_MAIN, fontMed_);
+    drawSidebar();
 
     renderPresent();  // flush toàn bộ frame một lần duy nhất
 }
@@ -291,6 +338,7 @@ void SDLRenderer::showResult(const int winner, const bool is_bot,
                              const WinLine* winLine) {
     clearScreen();
     drawBoard();  // board vẫn hiển thị phía sau overlay
+    drawSidebar();
 
     // highlight đường thắng
     if (winLine && !winLine->cells.empty()) {
@@ -300,7 +348,9 @@ void SDLRenderer::showResult(const int winner, const bool is_bot,
             int y = L.offsetY + r * L.cellSize + 2;
             drawRect(x, y, L.cellSize - 4, L.cellSize - 4, COLOR_WIN_HL, true);
         }
-        drawBoard();  // vẽ lại quân cờ lên trên highlight
+        // drawBoard();  // vẽ lại quân cờ lên trên highlight
+        drawPiecesOnly();
+        drawSidebar(); // sidebar vẫn hiển thị để không mất context người chơi
     }
 
     // màn che tối
@@ -328,7 +378,7 @@ void SDLRenderer::showResult(const int winner, const bool is_bot,
     }
 
     drawTextCentered(msg,                    bx, by + 20, bw, msgCol,         fontLarge_);
-    drawTextCentered("Press any key to quit", bx, by + 62, bw, COLOR_TEXT_DIM, fontSmall_);
+    drawTextCentered("Press \"R\" to play again or \"Esc\" to quit", bx, by + 62, bw, COLOR_TEXT_DIM, fontSmall_);
 
     renderPresent();
 }
@@ -393,8 +443,15 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context) {
             break;
 
         case SelectType::PLAYER_UI:
-            drawBoard();  // board đã visible, chỉ cần hint
-            sub("Click a cell or use arrow keys + Enter", screenH_ / 2 - startY);
+            drawBoard();
+            drawSidebar();  // sidebar luôn hiển thị trong game
+            {
+                int barY = screenH_ - STATUS_H;
+                drawRect(0, barY, screenW_ - SIDEBAR_W, STATUS_H, COLOR_PANEL, true);
+                drawTextCentered("Click a cell or use arrow keys + Enter",
+                                0, barY + (STATUS_H - FONT_SIZE_SMALL) / 2,
+                                screenW_ - SIDEBAR_W, COLOR_TEXT_DIM, fontSmall_);
+            }
             break;
 
         default:
@@ -444,6 +501,7 @@ void SDLRenderer::showValidSelect(SelectType selectType, int context) {
 void SDLRenderer::showInvalidMove() {
     clearScreen();
     drawBoard();  // board tetap visible
+    drawSidebar(); // sidebar vẫn hiển thị để không mất context người chơi
 
     int barH = STATUS_H;
     int barY = screenH_ - barH;

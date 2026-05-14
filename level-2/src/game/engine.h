@@ -174,7 +174,7 @@ class Engine {
      * Tác dụng phụ:
      *   - Render UI kết thúc
      */
-    void endGame(const GameResult& gameResult);
+    bool endGame(const GameResult& gameResult);
 
     /**
      * Mô tả:

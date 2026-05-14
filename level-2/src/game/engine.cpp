@@ -325,16 +325,12 @@ GameResult Engine::playGame() {
             col = point.second;
         } else {
             // human input
-            bool is_valid = false;
+            bool is_valid = true;
             do {
                 if (config->interactive) iRenderer->showSelectMenu(SelectType::PLAYER_UI);
-                if (!iInteraction->getPlayerMove(&row, &col)) {
-                    if (config->interactive) iRenderer->showInvalidMove();
-                    is_valid = true;
-                    continue;
-                }
-
+                iInteraction->getPlayerMove(&row, &col);
                 is_valid = Logic::isValidMove(gameSetup.board, gameSetup.size, row, col);
+
                 if (!is_valid) {
                     if (config->interactive) iRenderer->showInvalidMove();
                 }
@@ -392,13 +388,15 @@ GameResult Engine::playGame() {
  * Tác dụng phụ:
  *   - Render UI và log
  */
-void Engine::endGame(const GameResult& gameResult) {
+bool Engine::endGame(const GameResult& gameResult) {
     Logger::log("[Engine] Ending game . . .");
 
     if (!sanity_check()) {
         Logger::log("[Engine] Game stopped!", Logger::Level::ERROR);
-        return;
+        return false;
     }
+
+    bool playAgain = false;
 
     if (config->interactive) {
         iRenderer->clearScreen();
@@ -421,7 +419,9 @@ void Engine::endGame(const GameResult& gameResult) {
 
         // hiển thị kết quả cuối cùng
         iRenderer->showResult(gameResult.winner, gameResult.isBot, winLine ? &(*winLine) : nullptr);
-        iInteraction->pause();
+
+        playAgain = iInteraction->askPlayAgain();  // true = R, false = Esc
+
     } else if (config->judge_mode) {
         // mode judge (không interactive)
         iRenderer->printResult(gameResult);
@@ -445,6 +445,9 @@ void Engine::endGame(const GameResult& gameResult) {
     Logger::log(ss.str(), Logger::Level::DEBUG);
 
     Logger::log("[Engine] Game ended!");
+
+    // return true if replay, false if quit
+    return playAgain;
 }
 
 /**

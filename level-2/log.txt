@@ -1,18 +1,27 @@
 Tic-tac-toe Game (Version: 0.4.<STUDENT_ID> by baluong.87)
 ------------------------------------------------
-[INFO] - [2026-05-11 17:47:50] Logger initialized!
-[INFO] - [2026-05-11 17:47:50] SDL Renderer initialized!
-[INFO] - [2026-05-11 17:47:50] SDL Interaction initialized!
-[INFO] - [2026-05-11 17:47:50] Infra initialized!
-[INFO] - [2026-05-11 17:47:50] Engine initializing . . .
-[INFO] - [2026-05-11 17:47:50] Engine initialized!
-[INFO] - [2026-05-11 17:47:50] [Engine] Starting game . . .
-[INFO] - [2026-05-11 17:48:05] Board initialized!
-[INFO] - [2026-05-11 17:48:05] [Engine] Game started!
-[INFO] - [2026-05-11 17:48:05] [Engine] Playing game . . .
-[WARN] - [2026-05-11 17:48:48] Quit signal received. Cleaning up...
-[INFO] - [2026-05-11 17:48:48] Engine closing . . .
-[INFO] - [2026-05-11 17:48:48] Engine closed!
-[INFO] - [2026-05-11 17:48:48] Engine destroyed!
-[INFO] - [2026-05-11 17:48:48] Infra destroyed!
-[INFO] - [2026-05-11 17:48:48] Logger closing . . .
+[INFO] - [2026-05-14 23:51:17] Logger initialized!
+[INFO] - [2026-05-14 23:51:17] SDL Renderer initialized!
+[INFO] - [2026-05-14 23:51:17] SDL Interaction initialized!
+[INFO] - [2026-05-14 23:51:17] Infra initialized!
+[INFO] - [2026-05-14 23:51:17] Engine initializing . . .
+[INFO] - [2026-05-14 23:51:17] Engine initialized!
+[INFO] - [2026-05-14 23:51:17] [Engine] Starting game . . .
+[INFO] - [2026-05-14 23:51:28] Board initialized!
+[INFO] - [2026-05-14 23:51:28] [Engine] Game started!
+[INFO] - [2026-05-14 23:51:28] [Engine] Playing game . . .
+[INFO] - [2026-05-14 23:51:34] [Engine] Game done!
+[INFO] - [2026-05-14 23:51:34] [Engine] Ending game . . .
+[INFO] - [2026-05-14 23:51:50] [Engine] Game ended!
+[INFO] - [2026-05-14 23:51:50] [Engine] Starting game . . .
+[INFO] - [2026-05-14 23:52:12] Board initialized!
+[INFO] - [2026-05-14 23:52:12] [Engine] Game started!
+[INFO] - [2026-05-14 23:52:12] [Engine] Playing game . . .
+[INFO] - [2026-05-14 23:52:26] [Engine] Game done!
+[INFO] - [2026-05-14 23:52:26] [Engine] Ending game . . .
+[INFO] - [2026-05-14 23:52:31] [Engine] Game ended!
+[INFO] - [2026-05-14 23:52:31] Engine closing . . .
+[INFO] - [2026-05-14 23:52:31] Engine closed!
+[INFO] - [2026-05-14 23:52:31] Engine destroyed!
+[INFO] - [2026-05-14 23:52:31] Infra destroyed!
+[INFO] - [2026-05-14 23:52:31] Logger closing . . .

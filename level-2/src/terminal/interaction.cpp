@@ -279,6 +279,22 @@ bool TerminalInteraction::getPlayerMove(int* row, int* col) {
     return true;
 }
 
+bool TerminalInteraction::askPlayAgain() {
+    std::string input;
+    while (true) {
+        if (!(std::cin >> input)) {
+            // stream lỗi hoặc EOF — coi như từ chối
+            return false;
+        }
+        if (input.size() == 1) {
+            char c = static_cast<char>(std::tolower(static_cast<unsigned char>(input[0])));
+            if (c == 'y') return true;
+            if (c == 'n') return false;
+        }
+        Logger::log("invalid yes/no input, expected 'y' or 'n'.", Logger::Level::ERROR);
+    }
+}
+
 /**
  * Mô tả: Đóng interaction và giải phóng tài nguyên liên quan.
  * Đầu vào: Không.

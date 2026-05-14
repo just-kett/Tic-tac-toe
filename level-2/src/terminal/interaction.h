@@ -222,5 +222,9 @@ class TerminalInteraction : public I_Interaction {
      * Tác dụng phụ:
      *   - Gọi closeInteraction()
      */
+
+
+    bool askPlayAgain() override;
+
     void close() override;
 };

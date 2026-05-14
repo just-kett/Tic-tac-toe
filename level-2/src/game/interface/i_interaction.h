@@ -161,4 +161,6 @@ class I_Interaction {
      *   Dọn dẹp tài nguyên của interaction.
      */
     virtual void close() = 0;
+
+    virtual bool askPlayAgain() = 0;
 };

@@ -26,7 +26,11 @@
  * NOTE: Phải gọi init() trước khi sử dụng các hàm render.
  */
 class SDLRenderer : public I_Renderer {
-   private:
+    private:
+    // --- Current player state (for sidebar redraw) ---
+    int  currentPlayer_ = 0;
+    bool currentIsBot_  = false;
+
     // --- SDL core ---
     SDL_Window*   window_   = nullptr;
     SDL_Renderer* renderer_ = nullptr;
@@ -63,11 +67,12 @@ class SDLRenderer : public I_Renderer {
                   SDL_Color color, TTF_Font* font);
     void drawTextCentered(const std::string& text, int x, int y,
                           int maxW, SDL_Color color, TTF_Font* font);
+    void drawSidebar();
 
     // Vẽ board từ cache — được gọi bởi mọi hàm render
     void drawBoard();
 
-   public:
+    public:
     SDLRenderer();
     ~SDLRenderer();
 
@@ -79,6 +84,7 @@ class SDLRenderer : public I_Renderer {
     void showValidSelect(SelectType selectType, int context = NO_CONTEXT) override;
 
     void displayBoard(const char board[][BOARD_N_MAX], const int size) override;
+    void drawPiecesOnly();
     void showMove(const int row, const int col) override;
     void showInvalidMove() override;
 

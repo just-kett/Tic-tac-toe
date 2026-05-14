@@ -63,5 +63,7 @@ class SDLInteraction : public I_Interaction {
     bool selectBotLevel(BotLevel* levels, const int index) override;
     bool getPlayerMove(int* row, int* col) override;
 
+    bool askPlayAgain() override;
+
     void close() override;
 };

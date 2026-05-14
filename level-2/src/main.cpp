@@ -99,15 +99,16 @@ int main(int argc, char* argv[]) {
         iInteraction);
 
     try {
-        if (engine) {
-            // khởi tạo engine (setup ban đầu)
-            engine->init();
+    if (engine) {
+        engine->init();
 
-            // vòng đời game
-            engine->startGame();                         // chuẩn bị bắt đầu game
-            GameResult gameResult = engine->playGame();  // chạy game loop chính
-            engine->endGame(gameResult);                 // xử lý sau khi game kết thúc
+        bool playAgain = true;
+        while (playAgain) {
+            engine->startGame();
+            GameResult gameResult = engine->playGame();
+            playAgain = engine->endGame(gameResult);  // returns true if replay
         }
+    }
     } catch (const QuitException& e) {
         // NOTE: bắt tín hiệu quit (ví dụ user thoát game giữa chừng)
         Logger::log("Quit signal received. Cleaning up...", Logger::Level::WARNING);
