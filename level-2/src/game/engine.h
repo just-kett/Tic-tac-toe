@@ -1,7 +1,4 @@
-/**
- * Engine header file
- *
- */
+
 
 #pragma once
 
@@ -28,6 +25,9 @@ class Engine {
     bool isRunning;
     State currentState = State::TITLE;
 
+    GameResult playLoop();
+    bool isBotPlayer(const int player) const;
+
    public:
     Engine(const RunConfig* _config, I_Renderer* _iRenderer, I_Interaction* _iInteraction);
     ~Engine();
@@ -35,9 +35,13 @@ class Engine {
     void init();
     void close();
 
-    void run();
-    void handleEvents();
-    void updateState();
+    void startGame();
+    void selectSize();
+    void selectGoal();
+    void selectGameMode();
+    void selectBotLevels();
+    GameResult playGame();
+    void endGame(const GameResult& gameResult);
 
     bool running() { return isRunning; };
     
