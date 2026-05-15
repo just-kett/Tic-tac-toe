@@ -1,20 +1,16 @@
 Tic-tac-toe Game (Version: 0.4.<STUDENT_ID> by baluong.87)
 ------------------------------------------------
-[INFO] - [2026-05-15 18:36:55] Logger initialized!
-[INFO] - [2026-05-15 18:36:55] SDL Renderer initialized!
-[INFO] - [2026-05-15 18:36:55] SDL Interaction initialized!
-[INFO] - [2026-05-15 18:36:55] Infra initialized!
-[INFO] - [2026-05-15 18:36:55] Engine initializing . . .
-[INFO] - [2026-05-15 18:36:55] Engine initialized!
-[INFO] - [2026-05-15 18:36:55] [Engine] Starting game . . .
-[INFO] - [2026-05-15 18:37:05] Board initialized!
-[INFO] - [2026-05-15 18:37:05] [Engine] Game started!
-[INFO] - [2026-05-15 18:37:05] [Engine] Playing game . . .
-[INFO] - [2026-05-15 18:37:34] [Engine] Game done!
-[INFO] - [2026-05-15 18:37:34] [Engine] Ending game . . .
-[INFO] - [2026-05-15 18:37:39] [Engine] Game ended!
-[INFO] - [2026-05-15 18:37:39] Engine closing . . .
-[INFO] - [2026-05-15 18:37:39] Engine closed!
-[INFO] - [2026-05-15 18:37:39] Engine destroyed!
-[INFO] - [2026-05-15 18:37:39] Infra destroyed!
-[INFO] - [2026-05-15 18:37:39] Logger closing . . .
+[INFO] - [2026-05-15 21:06:21] Logger initialized!
+[INFO] - [2026-05-15 21:06:21] SDL Renderer initialized!
+[INFO] - [2026-05-15 21:06:21] SDL Interaction initialized!
+[INFO] - [2026-05-15 21:06:21] Infra initialized!
+[INFO] - [2026-05-15 21:06:21] Engine initializing . . .
+[INFO] - [2026-05-15 21:06:21] Engine initialized!
+[INFO] - [2026-05-15 21:06:21] [Engine] Starting game . . .
+[INFO] - [2026-05-15 21:06:34] Board initialized!
+[INFO] - [2026-05-15 21:06:34] [Engine] Game started!
+[INFO] - [2026-05-15 21:06:34] [Engine] Playing game . . .
+[INFO] - [2026-05-15 21:06:48] [Engine] Game done!
+[INFO] - [2026-05-15 21:06:48] [Engine] Ending game . . .
+[INFO] - [2026-05-15 21:07:09] [Engine] Game ended!
+[INFO] - [2026-05-15 21:07:09] Engine closing . . .

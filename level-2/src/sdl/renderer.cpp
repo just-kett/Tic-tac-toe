@@ -426,9 +426,9 @@ void SDLRenderer::drawSidebar() {
 
     SDL_Rect dst = {
         sx + 30,
-        60,
+        80,
         SIDEBAR_W - 60,
-        120
+        (SIDEBAR_W - 60) * 10 / 9
     };
 
     if (!sidebarFrames_.empty()) {
@@ -446,11 +446,11 @@ void SDLRenderer::drawSidebar() {
         : ("Player " + std::to_string(currentPlayer_ + 1) + "'s turn");
     SDL_Color col = (currentPlayer_ == 0) ? COLOR_X : COLOR_O;
 
-    drawTextCentered("CURRENT TURN", sx, 240, SIDEBAR_W, COLOR_TEXT_DIM,  fontSmall_);
-    drawTextCentered(symbol,         sx, 275,  SIDEBAR_W, col,             fontLarge_);
-    drawTextCentered(turnText,       sx, 255, SIDEBAR_W, COLOR_TEXT_MAIN, fontMed_);
+    drawTextCentered("CURRENT TURN", sx, 350, SIDEBAR_W, COLOR_TEXT_DIM,  fontSmall_);
+    drawTextCentered(symbol,         sx, 385,  SIDEBAR_W, col,             fontLarge_);
+    drawTextCentered(turnText,       sx, 365, SIDEBAR_W, COLOR_TEXT_MAIN, fontMed_);
 
-    drawBotThinkBubbles(sx, 330);
+    drawBotThinkBubbles(sx, 440);
 }
 
 void SDLRenderer::refresh() {
