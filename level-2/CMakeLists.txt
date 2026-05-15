@@ -43,6 +43,7 @@ target_link_libraries(game PRIVATE
     SDL2::SDL2         # Link SDL2 (standard way)
     SDL2_ttf::SDL2_ttf
     SDL2_image::SDL2_image
+    SDL2_gfx
     # SDL3::SDL3       # Link SDL3 (standard way)
 )
 
