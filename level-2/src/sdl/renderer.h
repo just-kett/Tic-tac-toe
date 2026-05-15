@@ -9,7 +9,9 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include <string>
+#include <vector>
 
 #include "../game/interface/i_renderer.h"
 #include "../game/logic.h"
@@ -31,9 +33,26 @@ class SDLRenderer : public I_Renderer {
     int  currentPlayer_ = 0;
     bool currentIsBot_  = false;
 
+    // --- Bot think-time display ---
+    // Set when a bot finishes its move; shown as chat bubbles in the sidebar.
+    Uint32 botMoveStartTick_ = 0;   // SDL_GetTicks() snapshot taken when bot turn begins
+    Uint32 lastBotThinkMs_   = 0;   // duration of the last completed bot move (ms)
+    bool   hasBotThinkTime_  = false; // true once at least one bot move has been recorded
+
     // --- SDL core ---
     SDL_Window*   window_   = nullptr;
     SDL_Renderer* renderer_ = nullptr;
+
+
+    std::vector<SDL_Texture*> sidebarFrames_;
+
+    int currentSidebarFrame_ = 0;
+
+    Uint32 lastSidebarFrameTime_ = 0;
+
+    const int SIDEBAR_FRAME_DELAY = 120;
+
+    SDL_Texture* setupSidebarImage_ = nullptr;  // static image for setup screens
 
     // --- Fonts ---
     TTF_Font* fontLarge_ = nullptr;
@@ -68,6 +87,9 @@ class SDLRenderer : public I_Renderer {
     void drawTextCentered(const std::string& text, int x, int y,
                           int maxW, SDL_Color color, TTF_Font* font);
     void drawSidebar();
+    void drawSetupSidebar();
+    void drawBotThinkBubbles(int sx, int startY);  // chat-bubble think-time display
+
 
     // Vẽ board từ cache — được gọi bởi mọi hàm render
     void drawBoard();
@@ -92,6 +114,10 @@ class SDLRenderer : public I_Renderer {
     void showResult(const int winner, const bool is_bot,
                     const WinLine* winLine = nullptr) override;
     void printResult(const GameResult& gameResult) override;
+
+    void updateSidebarAnimation();
+    void refresh();
+    
 
     void close() override;
 };

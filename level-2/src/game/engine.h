@@ -11,6 +11,7 @@
 #include "interface/i_interaction.h"
 #include "interface/i_renderer.h"
 #include "setup.h"
+#include <functional>
 
 /* ---------- Declarations ---------- */
 
@@ -61,6 +62,7 @@ class Engine {
      *   - Có thể log lỗi hoặc cảnh báo
      */
     bool sanity_check();
+    std::function<void()> onRefresh_ = nullptr;
 
    public:
     /**
@@ -191,5 +193,8 @@ class Engine {
      * Tác dụng phụ:
      *   - Cleanup tài nguyên nội bộ
      */
+
+    void setRefreshCallback(std::function<void()> cb) { onRefresh_ = cb; }
+    
     void close();
 };

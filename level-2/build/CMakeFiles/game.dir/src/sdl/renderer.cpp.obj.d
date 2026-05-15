@@ -264,6 +264,7 @@ CMakeFiles/game.dir/src/sdl/renderer.cpp.obj: \
  C:/msys64/ucrt64/include/SDL2/SDL_misc.h \
  C:/msys64/ucrt64/include/SDL2/SDL_ttf.h \
  C:/msys64/ucrt64/include/SDL2/SDL.h \
+ C:/msys64/ucrt64/include/SDL2/SDL_image.h \
  C:/msys64/ucrt64/include/c++/16.1.0/string \
  C:/msys64/ucrt64/include/c++/16.1.0/bits/stringfwd.h \
  C:/msys64/ucrt64/include/c++/16.1.0/bits/memoryfwd.h \
@@ -307,6 +308,11 @@ CMakeFiles/game.dir/src/sdl/renderer.cpp.obj: \
  C:/msys64/ucrt64/include/c++/16.1.0/tuple \
  C:/msys64/ucrt64/include/c++/16.1.0/bits/invoke.h \
  C:/msys64/ucrt64/include/c++/16.1.0/bits/ranges_util.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/vector \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/stl_uninitialized.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/stl_vector.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/stl_bvector.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/vector.tcc \
  C:/codedsa/Tic-tac-toe/level-2/src/game/interface/i_renderer.h \
  C:/codedsa/Tic-tac-toe/level-2/src/utils/config.h \
  C:/codedsa/Tic-tac-toe/level-2/src/game/logic.h \
@@ -317,11 +323,6 @@ CMakeFiles/game.dir/src/sdl/renderer.cpp.obj: \
  C:/msys64/ucrt64/include/c++/16.1.0/typeinfo \
  C:/msys64/ucrt64/include/c++/16.1.0/bits/nested_exception.h \
  C:/msys64/ucrt64/include/c++/16.1.0/bits/enable_special_members.h \
- C:/msys64/ucrt64/include/c++/16.1.0/vector \
- C:/msys64/ucrt64/include/c++/16.1.0/bits/stl_uninitialized.h \
- C:/msys64/ucrt64/include/c++/16.1.0/bits/stl_vector.h \
- C:/msys64/ucrt64/include/c++/16.1.0/bits/stl_bvector.h \
- C:/msys64/ucrt64/include/c++/16.1.0/bits/vector.tcc \
  C:/codedsa/Tic-tac-toe/level-2/src/game/setup.h \
  C:/msys64/ucrt64/include/c++/16.1.0/random \
  C:/msys64/ucrt64/include/c++/16.1.0/cstdint \

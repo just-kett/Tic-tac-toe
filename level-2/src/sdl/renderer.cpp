@@ -72,6 +72,9 @@ void SDLRenderer::init(const RunConfig& config) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
         throw std::runtime_error(std::string("SDL_Init failed: ") + SDL_GetError());
 
+    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
+        throw std::runtime_error(std::string("IMG_Init failed: ") + IMG_GetError());
+
     if (TTF_Init() < 0)
         throw std::runtime_error(std::string("TTF_Init failed: ") + TTF_GetError());
 
@@ -90,7 +93,44 @@ void SDLRenderer::init(const RunConfig& config) {
     if (!renderer_)
         throw std::runtime_error(std::string("SDL_CreateRenderer failed: ") + SDL_GetError());
 
+
     SDL_SetRenderDrawBlendMode(renderer_, SDL_BLENDMODE_BLEND);
+
+    
+    SDL_Surface* surf = IMG_Load("assets/sidebar/setup.png");
+    if (surf) {
+        setupSidebarImage_ = SDL_CreateTextureFromSurface(renderer_, surf);
+        SDL_FreeSurface(surf);
+    } else {
+        SDL_Log("Warning: could not load setup sidebar: %s", IMG_GetError());
+    }
+
+
+
+    for (int i = 0; i < 6; i++) {
+        std::string path =
+            "assets/sidebar/frame_" + std::to_string(i) + ".png";
+
+        SDL_Surface* surf = IMG_Load(path.c_str());
+
+        if (!surf) {
+            std::cerr << "IMG_Load failed: " << IMG_GetError() << '\n';
+            continue;
+        }
+
+        SDL_Texture* tex =
+            SDL_CreateTextureFromSurface(renderer_, surf);
+
+        SDL_FreeSurface(surf);
+
+        if (!tex) {
+            std::cerr << "CreateTexture failed\n";
+            continue;
+        }
+
+        sidebarFrames_.push_back(tex);
+    }
+
 
     fontLarge_ = TTF_OpenFont("assets/font.ttf", FONT_SIZE_LARGE);
     fontMed_   = TTF_OpenFont("assets/font.ttf", FONT_SIZE_MED);
@@ -100,12 +140,57 @@ void SDLRenderer::init(const RunConfig& config) {
         SDL_Log("Warning: could not load font: %s", TTF_GetError());
 }
 
+void SDLRenderer::updateSidebarAnimation() {
+    if (sidebarFrames_.empty()) return; // avoid crashing if fail to load sidebar frames
+
+    Uint32 now = SDL_GetTicks();
+
+    if (now - lastSidebarFrameTime_ >= SIDEBAR_FRAME_DELAY) {
+
+        currentSidebarFrame_ =
+            (currentSidebarFrame_ + 1) % sidebarFrames_.size();
+
+        lastSidebarFrameTime_ = now;
+    }
+}
+
+void SDLRenderer::drawSetupSidebar() {
+    int sx = screenW_ - SIDEBAR_W;
+    drawRect(sx, 0, SIDEBAR_W, screenH_, COLOR_PANEL, true);
+
+    // use setupSidebarImage_, fallback to first animation frame
+    SDL_Texture* img = setupSidebarImage_;
+    if (!img && !sidebarFrames_.empty())
+        img = sidebarFrames_[0];
+
+    if (img) {
+        int imgW = SIDEBAR_W - 20;
+        int imgH = imgW * 1.3;
+        SDL_Rect dst = {sx + 10, 150, imgW, imgH}; // image at the center of screen (vetically)
+        SDL_RenderCopy(renderer_, img, nullptr, &dst);
+    }
+
+    // text below image
+    int textY = 20 + (SIDEBAR_W * 1.7) + 20;
+    drawTextCentered("Setup", sx, textY,      SIDEBAR_W, COLOR_X,        fontLarge_);
+    drawTextCentered("Give me proper input or else",     sx, textY + 40, SIDEBAR_W, COLOR_TEXT_DIM, fontSmall_);
+}
+
 void SDLRenderer::close() {
+    for (auto tex : sidebarFrames_) {
+        SDL_DestroyTexture(tex);
+    }
+    sidebarFrames_.clear();
+
     if (fontLarge_) { TTF_CloseFont(fontLarge_); fontLarge_ = nullptr; }
     if (fontMed_)   { TTF_CloseFont(fontMed_);   fontMed_   = nullptr; }
     if (fontSmall_) { TTF_CloseFont(fontSmall_); fontSmall_ = nullptr; }
     if (renderer_)  { SDL_DestroyRenderer(renderer_); renderer_ = nullptr; }
     if (window_)    { SDL_DestroyWindow(window_);     window_   = nullptr; }
+    if (setupSidebarImage_) { SDL_DestroyTexture(setupSidebarImage_); setupSidebarImage_ = nullptr; }
+
+
+    IMG_Quit();
     TTF_Quit();
     SDL_Quit();
 }
@@ -261,10 +346,99 @@ void SDLRenderer::drawPiecesOnly() {
     }
 }
 
+void SDLRenderer::drawBotThinkBubbles(int sx, int startY) {
+    if (!hasBotThinkTime_) return;
+
+    // --- format duration into human-readable pieces ---
+    Uint32 ms  = lastBotThinkMs_;
+    Uint32 sec = ms / 1000;
+    Uint32 rem = ms % 1000;
+
+    // Build up to 3 bubble messages
+    std::vector<std::string> lines;
+    lines.push_back("Last move");
+
+    if (sec == 0) {
+        lines.push_back(std::to_string(ms) + " ms");
+    } else {
+        // e.g. "1.234 s"
+        char buf[32];
+        snprintf(buf, sizeof(buf), "%u.%03u s", sec, rem);
+        lines.push_back(std::string(buf));
+    }
+
+    if (ms < 50)
+        lines.push_back("Instant!");
+    else if (ms < 500)
+        lines.push_back("Quick");
+    else if (ms < 2000)
+        lines.push_back("Thinking...");
+    else
+        lines.push_back("Deep thought");
+
+    // --- layout ---
+    const int bubblePad  = 8;    // inner horizontal padding
+    const int bubbleVPad = 5;    // inner vertical padding
+    const int bubbleGap  = 6;    // gap between bubbles
+    const int maxBubbleW = SIDEBAR_W - 24;
+    const SDL_Color bubbleCol  = {35, 35, 60, 230};
+    const SDL_Color accentCol  = {70, 130, 255, 180};  // thin left-edge accent
+
+    int y = startY;
+
+    // Label above bubbles
+    drawTextCentered("THINK TIME", sx, y, SIDEBAR_W, COLOR_TEXT_DIM, fontSmall_);
+    y += FONT_SIZE_SMALL + 8;
+
+    for (size_t i = 0; i < lines.size(); i++) {
+        const std::string& txt = lines[i];
+
+        // measure text
+        int tw = 0, th = FONT_SIZE_SMALL;
+        if (fontSmall_)
+            TTF_SizeUTF8(fontSmall_, txt.c_str(), &tw, &th);
+
+        int bubbleW = std::min(tw + bubblePad * 2, maxBubbleW);
+        int bubbleH = th + bubbleVPad * 2;
+
+        // right-align bubbles (like outgoing messages)
+        int bx = sx + SIDEBAR_W - bubbleW - 8;
+
+        // bubble background
+        drawRect(bx, y, bubbleW, bubbleH, bubbleCol, true);
+
+        // thin accent line on the left edge of each bubble
+        drawRect(bx, y, 3, bubbleH, accentCol, true);
+
+        // text inside bubble
+        drawText(txt, bx + bubblePad, y + bubbleVPad, COLOR_TEXT_MAIN, fontSmall_);
+
+        y += bubbleH + bubbleGap;
+    }
+}
 
 void SDLRenderer::drawSidebar() {
+    updateSidebarAnimation();
+
     int sx = screenW_ - SIDEBAR_W;
+
     drawRect(sx, 0, SIDEBAR_W, screenH_, COLOR_PANEL, true);
+
+    SDL_Rect dst = {
+        sx + 30,
+        60,
+        SIDEBAR_W - 60,
+        120
+    };
+
+    if (!sidebarFrames_.empty()) {
+        SDL_RenderCopy(
+            renderer_,
+            sidebarFrames_[currentSidebarFrame_],
+            nullptr,
+            &dst
+        );
+    }
 
     std::string symbol   = (currentPlayer_ == 0) ? "[ X ]" : "[ O ]";
     std::string turnText = currentIsBot_
@@ -272,11 +446,19 @@ void SDLRenderer::drawSidebar() {
         : ("Player " + std::to_string(currentPlayer_ + 1) + "'s turn");
     SDL_Color col = (currentPlayer_ == 0) ? COLOR_X : COLOR_O;
 
-    drawTextCentered("CURRENT TURN", sx, 75, SIDEBAR_W, COLOR_TEXT_DIM,  fontSmall_);
-    drawTextCentered(symbol,         sx, 110,  SIDEBAR_W, col,             fontLarge_);
-    drawTextCentered(turnText,       sx, 150, SIDEBAR_W, COLOR_TEXT_MAIN, fontMed_);
+    drawTextCentered("CURRENT TURN", sx, 240, SIDEBAR_W, COLOR_TEXT_DIM,  fontSmall_);
+    drawTextCentered(symbol,         sx, 275,  SIDEBAR_W, col,             fontLarge_);
+    drawTextCentered(turnText,       sx, 255, SIDEBAR_W, COLOR_TEXT_MAIN, fontMed_);
+
+    drawBotThinkBubbles(sx, 330);
 }
 
+void SDLRenderer::refresh() {
+    clearScreen();
+    drawBoard();
+    drawSidebar();
+    renderPresent();
+}
 /* ---------- clearScreen ---------- */
 
 void SDLRenderer::clearScreen() {
@@ -321,12 +503,23 @@ void SDLRenderer::showMove(const int row, const int col) {
  *        Đây là hàm duy nhất gọi renderPresent() trong game loop.
  */
 void SDLRenderer::showPlayer(const int player, const bool is_bot) {
+    if (currentIsBot_ && botMoveStartTick_ != 0) {
+        lastBotThinkMs_  = SDL_GetTicks() - botMoveStartTick_;
+        hasBotThinkTime_ = true;
+        botMoveStartTick_ = 0;
+    }
+
     clearScreen();
     drawBoard();  // board luôn là lớp nền
 
     currentPlayer_ = player;
     currentIsBot_  = is_bot;
     // sidebar
+
+    if (is_bot) {
+        botMoveStartTick_ = SDL_GetTicks();
+    }
+
     drawSidebar();
 
     renderPresent();  // flush toàn bộ frame một lần duy nhất
@@ -338,6 +531,7 @@ void SDLRenderer::showResult(const int winner, const bool is_bot,
                              const WinLine* winLine) {
     clearScreen();
     drawBoard();  // board vẫn hiển thị phía sau overlay
+
     drawSidebar();
 
     // highlight đường thắng
@@ -387,6 +581,7 @@ void SDLRenderer::showResult(const int winner, const bool is_bot,
 
 void SDLRenderer::showSelectMenu(SelectType selectType, int context) {
     clearScreen();
+    drawSetupSidebar();
 
     int startY = screenH_ / 4;
     int areaW  = screenW_ - SIDEBAR_W;
@@ -445,6 +640,7 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context) {
         case SelectType::PLAYER_UI:
             drawBoard();
             drawSidebar();  // sidebar luôn hiển thị trong game
+
             {
                 int barY = screenH_ - STATUS_H;
                 drawRect(0, barY, screenW_ - SIDEBAR_W, STATUS_H, COLOR_PANEL, true);
@@ -501,6 +697,7 @@ void SDLRenderer::showValidSelect(SelectType selectType, int context) {
 void SDLRenderer::showInvalidMove() {
     clearScreen();
     drawBoard();  // board tetap visible
+
     drawSidebar(); // sidebar vẫn hiển thị để không mất context người chơi
 
     int barH = STATUS_H;

@@ -200,7 +200,7 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
     SDL_Event e;
 
     while (true) {
-        if (!SDL_WaitEvent(&e)) continue;
+        while (SDL_PollEvent(&e)) {
         waitForQuit(e);
 
         // --- Mouse click ---
@@ -223,16 +223,19 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
             return true;
         }
 
-        // --- Keyboard: mũi tên + Enter ---
+        // --- Keyboard navigation ---
         if (e.type == SDL_KEYDOWN) {
             switch (e.key.keysym.sym) {
                 case SDLK_ESCAPE:
                     throw QuitException();
                 default:
                     break;
+                }
             }
         }
-    }
+        if (onRefresh_) onRefresh_();
+        SDL_Delay(167);
+}
 }
 
 

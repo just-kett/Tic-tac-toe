@@ -42,6 +42,7 @@ target_link_libraries(game PRIVATE
     SDL2::SDL2         # Link SDL2 (standard way)
     SDL2_ttf::SDL2_ttf
     # SDL3::SDL3       # Link SDL3 (standard way)
+    SDL2_image
 )
 
 # 7. Compiler options for warnings and optimization

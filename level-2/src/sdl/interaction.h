@@ -12,6 +12,7 @@
 #include "../game/interface/i_interaction.h"
 #include "../game/setup.h"
 #include "../utils/config.h"
+#include <functional>
 
 /* ---------- Declarations ---------- */
 
@@ -45,6 +46,8 @@ class SDLInteraction : public I_Interaction {
     };
     BoardLayout calcLayout() const;
 
+    std::function<void()> onRefresh_ = nullptr;
+
     // --- Private helpers ---
     bool waitForQuit(SDL_Event& e);
     int  readIntFromKeyboard();  // gõ số + Enter để xác nhận
@@ -56,6 +59,8 @@ class SDLInteraction : public I_Interaction {
     void init(const RunConfig& config) override;
 
     void pause(int timeout = 0) override;
+
+    void setRefreshCallback(std::function<void()> cb) { onRefresh_ = cb; }
 
     bool selectSize(int* size) override;
     bool selectGoal(int* goal, const int size) override;

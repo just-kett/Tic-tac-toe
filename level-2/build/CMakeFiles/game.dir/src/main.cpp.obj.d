@@ -202,6 +202,17 @@ CMakeFiles/game.dir/src/main.cpp.obj: \
  C:/codedsa/Tic-tac-toe/level-2/src/game/logic.h \
  C:/msys64/ucrt64/include/c++/16.1.0/optional \
  C:/msys64/ucrt64/include/c++/16.1.0/bits/enable_special_members.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/functional \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/refwrap.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/std_function.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/unordered_map \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/unordered_map.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/hashtable.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/hashtable_policy.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/ext/aligned_buffer.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/node_handle.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/array \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/binders.h \
  C:\codedsa\Tic-tac-toe\level-2\src\utils/logger.h \
  C:/msys64/ucrt64/include/c++/16.1.0/fstream \
  C:/msys64/ucrt64/include/c++/16.1.0/bits/codecvt.h \
@@ -384,4 +395,5 @@ CMakeFiles/game.dir/src/main.cpp.obj: \
  C:/msys64/ucrt64/include/SDL2/SDL_misc.h \
  C:\codedsa\Tic-tac-toe\level-2\src\sdl/renderer.h \
  C:/msys64/ucrt64/include/SDL2/SDL_ttf.h \
- C:/msys64/ucrt64/include/SDL2/SDL.h
+ C:/msys64/ucrt64/include/SDL2/SDL.h \
+ C:/msys64/ucrt64/include/SDL2/SDL_image.h

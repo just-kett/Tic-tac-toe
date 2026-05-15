@@ -73,6 +73,8 @@ int main(int argc, char* argv[]) {
     I_Renderer* iRenderer = nullptr;
     I_Interaction* iInteraction = nullptr;
 
+    
+
     // chọn implementation dựa trên config
     if (!config.gui_flag || config.judge_mode) {
         // sử dụng terminal (CLI)
@@ -92,11 +94,23 @@ int main(int argc, char* argv[]) {
     }
     Logger::log("Infra initialized!");
 
-    // tạo game engine và inject dependency (config, renderer, interaction)
     Engine* engine = new Engine(
-        &config,
-        iRenderer,
-        iInteraction);
+    &config,
+    iRenderer,
+    iInteraction);
+
+    if (config.gui_flag && !config.judge_mode) {
+        auto* sdlI = static_cast<SDLInteraction*>(iInteraction);
+        auto* sdlR = static_cast<SDLRenderer*>(iRenderer);
+        
+        auto cb = [sdlR]() { sdlR->refresh(); };  // define cb first
+        
+        sdlI->setRefreshCallback(cb);   // then use it
+        engine->setRefreshCallback(cb); // same cb for both
+    }
+
+    // tạo game engine và inject dependency (config, renderer, interaction)
+
 
     try {
     if (engine) {

@@ -12,11 +12,14 @@
 #include <sstream>
 #include <thread>
 #include <vector>
+#include <atomic>
+#include <SDL2/SDL.h>
 
 #include "../utils/helper.h"
 #include "../utils/logger.h"
 #include "bot/bot_factory.h"
 #include "logic.h"
+
 
 /* ---------- Definitions ---------- */
 
@@ -309,9 +312,13 @@ GameResult Engine::playGame() {
         if (config->interactive) iRenderer->showPlayer(player, is_bot[player]);
 
         // 1. Get Move
-        if (is_bot[player]) {
-            // NOTE: đo thời gian thực thi bot
-            pII point = measureExecutionTime(
+    if (is_bot[player]) {
+        std::atomic<bool> done(false);
+        pII point;
+
+        // bot thinks on background thread
+        std::thread botThread([&]() {
+            point = measureExecutionTime(
                 std::format("bot#{}->getMove()", player),
                 [&]() {
                     return bots[player]->getMove(
@@ -320,10 +327,19 @@ GameResult Engine::playGame() {
                         gameSetup.goal);
                 },
                 TIME_ENABLED);
+            done = true;
+        });
 
-            row = point.first;
-            col = point.second;
-        } else {
+        // main thread keeps rendering while bot thinks
+        while (!done) {
+            if (onRefresh_) onRefresh_();
+            SDL_Delay(41);  // ~24fps
+        }
+        botThread.join();
+
+        row = point.first;
+        col = point.second;
+    } else {
             // human input
             bool is_valid = true;
             do {
@@ -347,8 +363,13 @@ GameResult Engine::playGame() {
         Logger::log(ss.str(), Logger::Level::DEBUG);
 
         // delay khi bot chơi để dễ quan sát
-        if (is_bot[player] and config->interactive) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
+        if (is_bot[player] && config->interactive) {
+            // render loop instead of sleep so animation keeps running
+            Uint32 start = SDL_GetTicks();
+            while (SDL_GetTicks() - start < (Uint32)SLEEP_TIME) {
+                if (onRefresh_) onRefresh_();
+                SDL_Delay(41);
+            }
         }
 
         // 3. Check result
