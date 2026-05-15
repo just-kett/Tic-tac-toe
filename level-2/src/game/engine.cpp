@@ -99,7 +99,7 @@ void Engine::selectGoal() {
 
     while (!isSelected) {
         if (config->interactive) {
-            iRenderer->showSelectMenu(SelectType::GOAL_UI);
+            iRenderer->showSelectMenu(SelectType::GOAL_UI, gameSetup.size);
         }
 
         isSelected = iInteraction->selectGoal(&gameSetup.goal, gameSetup.size);
