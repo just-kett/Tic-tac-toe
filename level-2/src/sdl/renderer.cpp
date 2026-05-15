@@ -214,32 +214,28 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
         break;
  
     case SelectType::SIZE_UI:
-        prompt = "Select board size(" +
-                 std::to_string(BOARD_N_MIN) + "-" +
-                 std::to_string(BOARD_N_MAX) + "): ";
+        prompt = "Select Board Size";
         break;
  
     case SelectType::GOAL_UI:
-        prompt = "Select goal(3-" +
-                 std::to_string(context == NO_CONTEXT ? BOARD_N_MAX : context) +
-                 "): ";
+        prompt = "Select Goal";
         break;
  
     case SelectType::GAME_MODE_UI:
-        prompt = "GameMode: (1) PvP | (2) PvE | (3) EvE ";
+        prompt = "Select GameMode";
         break;
  
     case SelectType::BOT_LEVEL_UI:
-        prompt = "BotLevel: (1) EASY | (2) MEDIUM | (3) HARD ";
+        prompt = "Select Bot Level";
         break;
  
     case SelectType::PLAYER_UI:
-        prompt = "Pick a move (row col): ";
+        prompt = "Pick a move: ";
         break;
  
     case SelectType::MUL_BOT_LEVEL_UI:
-        prompt = "Bot " + std::to_string(context) +
-                 " level: (1) EASY | (2) MEDIUM | (3) HARD ";
+        prompt = "Select Bot " + std::to_string(context) +
+                 " level";
         break;
  
     default:
@@ -254,7 +250,7 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
  
     if (renderFont != nullptr)
     {
-        SDL_Color textColor = {245, 245, 245, 255};
+        SDL_Color textColor = {250, 250, 250, 255};
         SDL_Color shadowColor = {0, 0, 0, 200};
  
         std::string cleanPrompt = prompt;
@@ -312,7 +308,6 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
 void SDLRenderer::showInvalidSelect(SelectType selectType, int context)
 {
     // TODO: Render thông báo lỗi
-    throw NotImplementedException();
 }
  
 /**
@@ -327,7 +322,6 @@ void SDLRenderer::showInvalidSelect(SelectType selectType, int context)
 void SDLRenderer::showValidSelect(SelectType selectType, int context)
 {
     // TODO: Render thông báo thành công
-    throw NotImplementedException();
 }
  
 /**
@@ -464,7 +458,6 @@ void SDLRenderer::showMove(const int row, const int col)
 void SDLRenderer::showInvalidMove()
 {
     // TODO: Render invalid move message
-    throw NotImplementedException();
 }
  
 /**
@@ -494,7 +487,6 @@ void SDLRenderer::showPlayer(const int player, const bool is_bot)
 void SDLRenderer::showResult(const int winner, const bool is_bot, const WinLine *winLine)
 {
     // TODO: Render result
-    throw NotImplementedException();
 }
  
 /**
@@ -509,7 +501,6 @@ void SDLRenderer::showResult(const int winner, const bool is_bot, const WinLine 
 void SDLRenderer::printResult(const GameResult &gameResult)
 {
     // TODO: Print result
-    throw NotImplementedException();
 }
  
 /**
