@@ -99,16 +99,17 @@ void SDLRenderer::clearScreen() {
 
 }
  
-void SDLRenderer::renderPresent()
-{
+void SDLRenderer::renderPresent() {
+
     SDL_RenderPresent(renderer);
+
 }
  
 static void drawThickLine(SDL_Renderer *renderer,
                           int x1, int y1,
                           int x2, int y2,
-                          int thickness)
-{
+                          int thickness) {
+
     int half = thickness / 2;
     for (int dy = -half; dy <= half; dy++)
     {
@@ -119,6 +120,7 @@ static void drawThickLine(SDL_Renderer *renderer,
                                x2 + dx, y2 + dy);
         }
     }
+
 }
  
 void SDLRenderer::showSelectMenu(SelectType selectType, int context) {
@@ -217,8 +219,8 @@ void SDLRenderer::showInvalidSelect(SelectType selectType, int context) {}
  
 void SDLRenderer::showValidSelect(SelectType selectType, int context) {}
  
-void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
-{
+void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size) {
+
     currentBoardSize = size;
     SDL_Rect fullScreenRect = {0, 0, screenWidth, screenHeight};
     SDL_RenderCopy(renderer, boardTexture, NULL, &fullScreenRect);

@@ -1,14 +1,3 @@
-/**
- * Tic-tac-toe Game in C++
- * Using Procedural Programming paradigm.
- * Approaching the game with four functional components (Logic, Interaction, UI and Helper)
- *
- * by baluong.87
- *
- * level 2.0 (OOP paradigm + SDL graphic - module)
- *
- * base from v0.5 23/02/2026
- */
 
 /* ---------- Importing ---------- */
 
@@ -30,28 +19,6 @@
 #include "sdl/interaction.h"
 #include "sdl/renderer.h"
 
-/**
- * Mô tả:
- *   Hàm main là entry point của chương trình.
- *   Thực hiện các bước:
- *   - Parse cấu hình từ command line
- *   - Khởi tạo logger
- *   - Khởi tạo hạ tầng (renderer + interaction) theo mode (terminal/SDL)
- *   - Khởi tạo và chạy game engine
- *   - Dọn dẹp tài nguyên trước khi thoát
- *
- * Đầu vào:
- *   - argc: số lượng tham số dòng lệnh
- *   - argv: mảng chứa các tham số dòng lệnh
- *
- * Đầu ra:
- *   - int: mã thoát của chương trình (0 = thành công)
- *
- * Tác dụng phụ:
- *   - Ghi log ra console/file
- *   - Cấp phát và giải phóng bộ nhớ động (new/delete)
- *   - Tương tác với hệ thống (terminal hoặc SDL)
- */
 int main(int argc, char* argv[]) {
     // parse config từ command line
     RunConfig config = parseArgs(argc, argv);
@@ -140,75 +107,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
-/* ---------- Compile ---------- */
-/**
- * Open terminal at folder 'level-2':
- *
- * 1 - Prepare build folder:
- *  mkdir build
- *  cd build
- *
- * 2 - Config project:
- *  cmake ..
- *
- * 3 - Compile:
- *  cmake --build .
- *
- * After setup, next compile only need to run 2 + 3
- */
-
-/*
-level-2/
-│
-├── CMakeLists.txt
-│
-├── build/
-│
-├── assets/
-│
-└── src/
-    ├── main.cpp
-    │
-    ├── game/
-    │   ├── engine.cpp
-    │   ├── engine.h
-    │   ├── logic.cpp
-    │   ├── logic.h
-    │   ├── setup.h
-    │   │
-    │   ├── bot/
-    │   │   ├── bot_factory.cpp
-    │   │   ├── bot_factory.h
-    │   │   ├── bot_lv1.cpp
-    │   │   ├── bot_lv1.h
-    │   │   ├── ...
-    │   │   ├── bot.cpp
-    │   │   └── bot.h
-    │   │
-    │   └── interface/
-    │       ├── i_interaction.cpp
-    │       ├── i_interaction.h
-    │       ├── i_renderer.cpp
-    │       └── i_renderer.h
-    │
-    ├── sdl/
-    │   ├── interaction.cpp
-    │   ├── interaction.h
-    │   ├── renderer.cpp
-    │   └── renderer.h
-    │
-    ├── terminal/
-    │   ├── interaction.cpp
-    │   ├── interaction.h
-    │   ├── renderer.cpp
-    │   └── renderer.h
-    │
-    └── utils/
-        ├── config.cpp
-        ├── config.h
-        ├── helper.h
-        ├── helper.tpp
-        ├── logger.cpp
-        └── logger.h
-*/

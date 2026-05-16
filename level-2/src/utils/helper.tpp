@@ -14,28 +14,6 @@
 
 /* ---------- Definitions ---------- */
 
-/**
- * Mô tả:
- *   Cài đặt hàm template đo thời gian thực thi của một function.
- *   - Hỗ trợ cả function có return value và void
- *   - Có thể bật/tắt việc log thời gian bằng flag "enabled"
- *
- * Đầu vào:
- *   - label: tên/nhãn của function (dùng để log)
- *   - func: function/lambda cần thực thi
- *   - enabled: bật/tắt đo thời gian
- *
- * Đầu ra:
- *   - Nếu func có return → trả về kết quả của func
- *   - Nếu func void → không trả về gì
- *
- * Tác dụng phụ:
- *   - Ghi log thời gian thực thi (DEBUG level) nếu enabled = true
- *
- * NOTE:
- *   - Sử dụng std::invoke_result_t để suy ra kiểu trả về
- *   - Dùng if constexpr để xử lý compile-time cho void/non-void
- */
 template <typename Function>
 auto measureExecutionTime(const std::string& label, Function func, bool enabled)
     -> std::invoke_result_t<Function> {
