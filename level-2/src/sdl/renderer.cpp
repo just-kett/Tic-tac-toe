@@ -99,17 +99,16 @@ void SDLRenderer::clearScreen() {
 
 }
  
-void SDLRenderer::renderPresent() {
-
+void SDLRenderer::renderPresent()
+{
     SDL_RenderPresent(renderer);
-
 }
  
 static void drawThickLine(SDL_Renderer *renderer,
                           int x1, int y1,
                           int x2, int y2,
-                          int thickness) {
-
+                          int thickness)
+{
     int half = thickness / 2;
     for (int dy = -half; dy <= half; dy++)
     {
@@ -120,14 +119,15 @@ static void drawThickLine(SDL_Renderer *renderer,
                                x2 + dx, y2 + dy);
         }
     }
-
 }
  
 void SDLRenderer::showSelectMenu(SelectType selectType, int context) {
 
+    if (selectType != SelectType::PLAYER_UI) {
     clearScreen();    
     SDL_Rect fullScreenRect = {0, 0, screenWidth, screenHeight};
     SDL_RenderCopy(renderer, backgroundTexture, NULL, &fullScreenRect);
+    }
  
     std::string prompt = "";
  
@@ -137,29 +137,34 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context) {
         break;
  
     case SelectType::SIZE_UI:
-        prompt = "Select Board Size";
+        prompt = "Enter Board Size";
         break;
  
     case SelectType::GOAL_UI:
-        prompt = "Select Goal";
+        prompt = "Enter Goal";
         break;
  
     case SelectType::GAME_MODE_UI:
-        prompt = "Select Game Mode";
+        prompt = "Enter Game Mode";
         break;
  
     case SelectType::BOT_LEVEL_UI:
-        prompt = "Select Bot Level";
+        prompt = "Enter Bot Level";
+        break;
+    
+    case SelectType::PLAYER_UI:
+        prompt = "."; // placeholder
         break;
  
     case SelectType::MUL_BOT_LEVEL_UI:
-        prompt = "Select Bot " + std::to_string(context + 1) +
+        prompt = "Enter Bot " + std::to_string(context + 1) +
                  " level";
         break;
  
     default:
         break;
     }
+
     TTF_Font* renderFont = nullptr;
     if (selectType == SelectType::TITLE_UI && titleFont != nullptr) {
         renderFont = titleFont;
@@ -178,8 +183,8 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context) {
         std::string cleanPrompt = prompt;
         cleanPrompt.erase(std::remove(cleanPrompt.begin(), cleanPrompt.end(), '\n'), cleanPrompt.end());
  
-        SDL_Surface *shadowSurface = TTF_RenderText_Blended(renderFont, cleanPrompt.c_str(), shadowColor);
-        SDL_Surface *textSurface = TTF_RenderText_Blended(renderFont, cleanPrompt.c_str(), textColor);
+        SDL_Surface *shadowSurface = TTF_RenderText_Blended_Wrapped(renderFont, cleanPrompt.c_str(), shadowColor, NULL);
+        SDL_Surface *textSurface = TTF_RenderText_Blended_Wrapped(renderFont, cleanPrompt.c_str(), textColor, NULL);
         if (shadowSurface != nullptr && textSurface != nullptr)
         {
             SDL_Texture *shadowTexture = SDL_CreateTextureFromSurface(renderer, shadowSurface);
@@ -211,7 +216,9 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context) {
         std::cerr << "[SDL_ttf ERROR] Font is nullptr " << std::endl;
     }
 
-    renderPresent();
+    if (selectType != SelectType::PLAYER_UI) {
+        renderPresent();
+    }
 
 }
  
@@ -221,6 +228,7 @@ void SDLRenderer::showValidSelect(SelectType selectType, int context) {}
  
 void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size) {
 
+    SelectType s;
     currentBoardSize = size;
     SDL_Rect fullScreenRect = {0, 0, screenWidth, screenHeight};
     SDL_RenderCopy(renderer, boardTexture, NULL, &fullScreenRect);
@@ -313,7 +321,10 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size) 
         }
     }
 }
- 
+    if (s == SelectType::PLAYER_UI) {
+        renderPresent();
+    }
+    
     renderPresent();
 
 }

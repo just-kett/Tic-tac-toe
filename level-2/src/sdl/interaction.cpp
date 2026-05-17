@@ -48,19 +48,19 @@ void SDLInteraction::pause(int timeout) {
     SDL_Event event;
 
     while (waiting) {
-        if (SDL_WaitEvent(&event)) {
-            if (waitForQuit(event)) {
-            }
 
-            if (event.type == SDL_QUIT) {
-                throw QuitException();
-            }
+        waitForQuit(event);
 
-            if (event.type == SDL_KEYDOWN || event.type == SDL_MOUSEBUTTONDOWN) {
-                waiting = false;
-            }
+        if (event.type == SDLK_ESCAPE) {
+            throw QuitException();
+        }
+        
+        if (event.type == SDL_KEYDOWN || SDL_MOUSEBUTTONDOWN) {
+            waiting = false;
         }
     }
+
+    SDL_Delay(3000);
 
 }
 
@@ -71,38 +71,47 @@ int SDLInteraction::getInput() {
 
     while (true) {
 
-        if (!SDL_WaitEvent(&event)) {
-            continue;
-        }
-        if (event.type != SDL_KEYDOWN) {
-            continue;
-        }
-        
-        SDL_Keycode key = event.key.keysym.sym;
+        while (SDL_PollEvent(&event)) {
 
-        if (key == SDLK_RETURN || key == SDLK_KP_ENTER) {
-            if (buffer.empty()) {
-                return -1;
+            waitForQuit(event);
+
+            if (event.type != SDL_KEYDOWN) {
+                continue;
             }
-            try { return std::stoi(buffer); }
-            catch (...) { return -1; }
-        }
-        else if (key == SDLK_BACKSPACE) {
-            if (!buffer.empty()) {
-                buffer.pop_back();
+
+            SDL_Keycode key = event.key.keysym.sym;
+
+            if (key == SDLK_RETURN || key == SDLK_KP_ENTER) {
+
+                if (buffer.empty()) {
+                    return -1;
+                }
+
+                try {
+                    return std::stoi(buffer);
+                }
+                catch (...) {
+                    return -1;
+                }
             }
-        }
-        else if (key >= SDLK_0 && key <= SDLK_9) {
-            buffer += static_cast<char>('0' + (key - SDLK_0));
-        }
-        else if (key >= SDLK_KP_0 && key <= SDLK_KP_9) {
-            buffer += static_cast<char>('0' + (key - SDLK_0));
-        }
-        else if (key == SDLK_ESCAPE) {
-            throw QuitException();
+            else if (key == SDLK_BACKSPACE) {
+                
+                if (!buffer.empty()) {
+                    buffer.pop_back();
+                }
+            }
+            else if (key >= SDLK_0 && key <= SDLK_9) {
+                buffer += static_cast<char>('0' + (key - SDLK_0));
+            }
+            else if  (key >= SDLK_KP_0 && key <= SDLK_KP_9) {
+                buffer += static_cast<char>('0' + (key - SDLK_KP_0));
+            }
+            else if (key == SDLK_ESCAPE) {
+                throw QuitException();
+            }
         }
     }
-
+    SDL_Delay(1000);
 }
 
 
@@ -113,7 +122,7 @@ bool SDLInteraction::selectSize(int* size) {
         return false;
     }
     *size = val;
-    int boardsize = val;
+    boardsize = val;
     SDL_Delay(1000);
     return true;
 
@@ -204,7 +213,43 @@ bool SDLInteraction::selectBotLevel(BotLevel* levels, const int index) {
 }
 
 bool SDLInteraction::getPlayerMove(int* row, int* col) {
-    return true;
+    SDL_Event event;
+
+    while (true) {
+        
+        while (SDL_PollEvent(&event)) {
+            waitForQuit(event);
+
+            if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
+                int x = event.button.x;
+                int y = event.button.y;
+
+                int boardArea = std::min(screenWidth, screenHeight);
+                int cellSize = boardArea / std::max(1, boardsize);
+                int startX = (screenWidth - boardArea) / 2;
+                int startY = (screenHeight - boardArea) / 2;
+
+                if (x < startX || x >= startX + boardArea || y < startY || y >= startY + boardArea) {
+                    return false; 
+                }
+
+                int clickedCol = (x - startX) / cellSize;
+                int clickedRow = (y - startY) / cellSize;
+
+                *row = clickedRow;
+                *col = clickedCol;
+                return true;
+            }
+            if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_ESCAPE) {
+                    throw QuitException();
+                }
+            }
+        }
+    }
+
+    SDL_Delay(1000);
+
 }
 
 void SDLInteraction::close() {}

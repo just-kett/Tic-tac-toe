@@ -23,6 +23,7 @@ class TerminalInteraction : public I_Interaction {
 
    public:
 
+    TerminalInteraction();
     ~TerminalInteraction();
 
     void init(const RunConfig& config) override;
