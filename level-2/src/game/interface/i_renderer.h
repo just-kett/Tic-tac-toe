@@ -30,7 +30,7 @@ class I_Renderer {
 
     virtual void showValidSelect(SelectType selectType, int context = NO_CONTEXT) = 0;
 
-    virtual void displayBoard(const char board[][BOARD_N_MAX], const int size) = 0;
+    virtual void displayBoard(const char board[][BOARD_N_MAX], const int size, const bool showWinline) = 0;
 
     virtual void showMove(const int row, const int col) = 0;
 
@@ -38,7 +38,7 @@ class I_Renderer {
 
     virtual void showPlayer(const int player, const bool is_bot) = 0;
 
-    virtual void showResult(const int winner, const bool is_bot, const WinLine* winLine = nullptr) = 0;
+    virtual void showResult(const int winner, const bool is_bot, const int size, const char board[][BOARD_N_MAX], const WinLine* winLine = nullptr) = 0;
 
     virtual void printResult(const GameResult& gameResult) = 0;
 

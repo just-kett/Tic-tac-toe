@@ -4,7 +4,6 @@
  */
  
 #include "renderer.h"
-#include <SDL2/SDL2_gfxPrimitives.h>
  
 /* ---------- Importing ---------- */
  
@@ -16,8 +15,10 @@
 #include "../game/setup.h"
 #include "../utils/config.h"
  
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL2_gfxPrimitives.h>
  
 /* ---------- Definitions ---------- */
  
@@ -226,9 +227,8 @@ void SDLRenderer::showInvalidSelect(SelectType selectType, int context) {}
  
 void SDLRenderer::showValidSelect(SelectType selectType, int context) {}
  
-void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size) {
+void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size, bool showWinline) {
 
-    SelectType s;
     currentBoardSize = size;
     SDL_Rect fullScreenRect = {0, 0, screenWidth, screenHeight};
     SDL_RenderCopy(renderer, boardTexture, NULL, &fullScreenRect);
@@ -241,21 +241,19 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size) 
     int endY = startY + boardArea;
  
     const SDL_Color GRID_COLOR = {150, 150, 150, 255};
-    const SDL_Color PLAYER_X_COLOR = {52, 152, 219, 255};
-    const SDL_Color PLAYER_O_COLOR = {203, 67, 53, 255};
+    const SDL_Color PLAYER_X_COLOR = {40, 40, 40, 255};
+    const SDL_Color PLAYER_O_COLOR = {40, 40, 40, 255};
  
     SDL_SetRenderDrawColor(renderer, GRID_COLOR.r, GRID_COLOR.g, GRID_COLOR.b, GRID_COLOR.a);
  
     int gridThickness = std::max(6, cellSize / 20);
     
-    for (int i = 1; i < size; i++) 
-    {
+    for (int i = 1; i < size; i++) {
         int y = startY + i * cellSize;
         drawThickLine(renderer, startX, y, endX, y, gridThickness);
     }
  
-    for (int j = 1; j < size; j++) 
-    {
+    for (int j = 1; j < size; j++) {
         int x = startX + j * cellSize;
         drawThickLine(renderer, x, startY, x, endY, gridThickness);
     }
@@ -277,29 +275,28 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size) 
              Sint16 x2 = cellX + cellSize - padding;
              Sint16 y2 = cellY + cellSize - padding;
 
-           for (int t = -thickness; t <= thickness; ++t) {
-                aalineRGBA(renderer,
-                           x1 + t,
-                           y1,
-                           x2 + t,
-                           y2,
-                           PLAYER_X_COLOR.r,
-                           PLAYER_X_COLOR.g,
-                           PLAYER_X_COLOR.b,
-                           PLAYER_X_COLOR.a);
-                }
+            thickLineRGBA(renderer,
+                        x1,
+                        y1,
+                        x2,
+                        y2,
+                        thickness * 2,
+                        PLAYER_X_COLOR.r,
+                        PLAYER_X_COLOR.g,
+                        PLAYER_X_COLOR.b,
+                        PLAYER_X_COLOR.a);
 
-           for (int t = -thickness; t <= thickness; ++t) {
-                aalineRGBA(renderer,
-                           x2 + t,
-                           y1,
-                           x1 + t,
-                           y2,
-                           PLAYER_X_COLOR.r,
-                           PLAYER_X_COLOR.g,
-                           PLAYER_X_COLOR.b,
-                           PLAYER_X_COLOR.a);
-                }
+            thickLineRGBA(renderer,
+                        x2,
+                        y1,
+                        x1,
+                        y2,
+                        thickness * 2,
+                        PLAYER_X_COLOR.r,
+                        PLAYER_X_COLOR.g,
+                        PLAYER_X_COLOR.b,
+                        PLAYER_X_COLOR.a);
+            
             }
             else if (board[i][j] == 'O') {
                    int centerX = cellX + cellSize / 2;
@@ -317,15 +314,14 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size) 
                             PLAYER_O_COLOR.g,
                             PLAYER_O_COLOR.b,
                             PLAYER_O_COLOR.a);
+                    }
+                }
             }
         }
-    }
-}
-    if (s == SelectType::PLAYER_UI) {
+    
+    if (showWinline) {
         renderPresent();
     }
-    
-    renderPresent();
 
 }
 
@@ -335,7 +331,40 @@ void SDLRenderer::showInvalidMove() {}
  
 void SDLRenderer::showPlayer(const int player, const bool is_bot) {}
  
-void SDLRenderer::showResult(const int winner, const bool is_bot, const WinLine *winLine) {}
+void SDLRenderer::showResult(const int winner, const bool is_bot, const int size, const char board[][BOARD_N_MAX], const WinLine *winLine) {
+
+    if (!winLine || winLine->cells.empty()) {
+        return;
+    }
+
+    displayBoard(board, size, false);
+
+    int boardArea = std::min(screenWidth, screenHeight);
+    int cellSize = boardArea / size;
+    int thickness = std::max(6, cellSize / 18);
+    const SDL_Color HIGH_LIGHT_COLOR = {40, 40, 40, 255};
+
+    auto firstCell = winLine->cells.front();
+    auto lastCell = winLine->cells.back();
+    Sint16 x1 = firstCell.second * cellSize + cellSize / 2;
+    Sint16 y1 = firstCell.first * cellSize + cellSize / 2;
+    Sint16 x2 = lastCell.second * cellSize + cellSize / 2;
+    Sint16 y2 = lastCell.first * cellSize + cellSize / 2;
+
+    thickLineRGBA(renderer, 
+                  x2, 
+                  y2, 
+                  x1, 
+                  y1, 
+                  thickness * 2, 
+                  HIGH_LIGHT_COLOR.r, 
+                  HIGH_LIGHT_COLOR.g, 
+                  HIGH_LIGHT_COLOR.b, 
+                  HIGH_LIGHT_COLOR.a);
+    
+    renderPresent();
+                
+}
  
 void SDLRenderer::printResult(const GameResult &gameResult) {}
  

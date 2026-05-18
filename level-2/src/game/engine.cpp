@@ -195,7 +195,7 @@ GameResult Engine::playLoop() {
 
         if (config->interactive) {
             iRenderer->clearScreen();
-            iRenderer->displayBoard(gameSetup.board, gameSetup.size);
+            iRenderer->displayBoard(gameSetup.board, gameSetup.size, true);
             iRenderer->showPlayer(player, isBotPlayer(player));
         }
 
@@ -234,7 +234,7 @@ GameResult Engine::playLoop() {
 
         if (config->interactive) {
             iRenderer->clearScreen();
-            iRenderer->displayBoard(gameSetup.board, gameSetup.size);
+            iRenderer->displayBoard(gameSetup.board, gameSetup.size, true);
             iRenderer->showPlayer(player, isBotPlayer(player));
         }
 
@@ -281,7 +281,7 @@ void Engine::endGame(const GameResult& gameResult) {
             }
         }
 
-        iRenderer->showResult(gameResult.winner, gameResult.isBot, winLine);
+        iRenderer->showResult(gameResult.winner, gameResult.isBot, gameSetup.size, gameSetup.board, winLine);
     }
 
     if (config->judge_mode) {

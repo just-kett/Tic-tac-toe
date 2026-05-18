@@ -31,8 +31,6 @@ class SDLRenderer : public I_Renderer {
     
     void renderPresent();
 
-    void drawRect(int x, int y, int w, int h, SDL_Color color, bool filled);
-
    public:
 
     SDLRenderer();
@@ -49,7 +47,7 @@ class SDLRenderer : public I_Renderer {
 
     void showValidSelect(SelectType selectType, int context = NO_CONTEXT) override;
 
-    void displayBoard(const char board[][BOARD_N_MAX], const int size) override;
+    void displayBoard(const char board[][BOARD_N_MAX], const int size, const bool showWinline) override;
 
     void showMove(const int row, const int col) override;
 
@@ -57,7 +55,7 @@ class SDLRenderer : public I_Renderer {
 
     void showPlayer(const int player, const bool is_bot) override;
 
-    void showResult(const int winner, const bool is_bot, const WinLine* winLine = nullptr) override;
+    void showResult(const int winner, const bool is_bot, const int size, const char board[][BOARD_N_MAX], const WinLine* winLine = nullptr) override;
 
     void printResult(const GameResult& gameResult) override;
 

@@ -107,7 +107,7 @@ void TerminalRenderer::showValidSelect(SelectType selectType, int context) {
     }
 }
 
-void TerminalRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size) {
+void TerminalRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size, const bool showWinline) {
     std::cout << "    ";
     for (int c = 0; c < size; c++) {
         std::cout << c;
@@ -157,7 +157,7 @@ void TerminalRenderer::showInvalidMove() {
     std::cout << "Invalid move!" << std::endl;
 }
 
-void TerminalRenderer::showResult(const int winner, const bool is_bot, const WinLine* winLine) {
+void TerminalRenderer::showResult(const int winner, const bool is_bot, const int size, const char board[][BOARD_N_MAX], const WinLine* winLine) {
     if (winner == -1) {
         std::cout << "Draw!" << std::endl;
         return;
