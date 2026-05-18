@@ -166,6 +166,8 @@ bool TerminalInteraction::getPlayerMove(int* row, int* col) {
     return true;
 }
 
+bool TerminalInteraction::closeWindow() {}
+
 void TerminalInteraction::close() {
     closeInteraction();
 }

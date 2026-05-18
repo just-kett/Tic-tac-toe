@@ -49,18 +49,20 @@ void SDLInteraction::pause(int timeout) {
 
     while (waiting) {
 
-        waitForQuit(event);
+        while (SDL_PollEvent(&event)) {
 
-        if (event.type == SDLK_ESCAPE) {
-            throw QuitException();
-        }
+            waitForQuit(event);
         
-        if (event.type == SDL_KEYDOWN || SDL_MOUSEBUTTONDOWN) {
-            waiting = false;
+            if (event.type == SDL_QUIT) {
+                throw QuitException();
+            }
+            if (event.type == SDL_KEYDOWN || event.type == SDL_MOUSEBUTTONDOWN) {
+                waiting = false;
+            }
         }
     }
 
-    SDL_Delay(3000);
+    SDL_Delay(16);
 
 }
 
@@ -111,7 +113,7 @@ int SDLInteraction::getInput() {
             }
         }
     }
-    SDL_Delay(1000);
+    SDL_Delay(16);
 }
 
 
@@ -123,7 +125,7 @@ bool SDLInteraction::selectSize(int* size) {
     }
     *size = val;
     boardsize = val;
-    SDL_Delay(1000);
+    SDL_Delay(16);
     return true;
 
 }
@@ -136,7 +138,7 @@ bool SDLInteraction::selectGoal(int* goal, const int size) {
         return false;
     }
     *goal = val;
-    SDL_Delay(1000);
+    SDL_Delay(16);
     return true;
 
 }
@@ -156,15 +158,15 @@ bool SDLInteraction::selectGameMode(GameMode* mode) {
         switch(choice) {
             case SDLK_1: case SDLK_KP_1: 
                 *mode = GameMode::PVP;
-                SDL_Delay(1000);
+                SDL_Delay(16);
                 return true;
             case SDLK_KP_2: case SDLK_2:
                 *mode = GameMode::PVE;
-                SDL_Delay(1000);
+                SDL_Delay(16);
                 return true; 
             case SDLK_KP_3: case SDLK_3:
                 *mode = GameMode::EVE;
-                SDL_Delay(1000);
+                SDL_Delay(16);
                 return true;
             case SDLK_ESCAPE:
                 throw QuitException();
@@ -193,15 +195,15 @@ bool SDLInteraction::selectBotLevel(BotLevel* levels, const int index) {
         switch (choice) {
             case SDLK_1: case SDLK_KP_1:
                 levels[index] = BotLevel::EASY;
-                SDL_Delay(1000);
+                SDL_Delay(16);
                 return true;
             case SDLK_2: case SDLK_KP_2:
                 levels[index] = BotLevel::MEDIUM;
-                SDL_Delay(1000);
+                SDL_Delay(16);
                 return true;
             case SDLK_3: case SDLK_KP_3:
                 levels[index] = BotLevel::HARD;
-                SDL_Delay(1000);
+                SDL_Delay(16);
                 return true;
             case SDLK_ESCAPE:
                 throw QuitException();
@@ -248,7 +250,26 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
         }
     }
 
-    SDL_Delay(1000);
+    SDL_Delay(16);
+
+}
+
+bool SDLInteraction::closeWindow() {
+    SDL_Event event;
+
+    while (true) {
+
+        while (SDL_PollEvent(&event)) {
+
+            waitForQuit(event);
+
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
+                return true;
+            }
+        }
+    }
+
+    SDL_Delay(16);
 
 }
 

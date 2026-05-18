@@ -43,5 +43,7 @@ class SDLInteraction : public I_Interaction {
 
     bool getPlayerMove(int* row, int* col) override;
 
+    bool closeWindow() override;
+
     void close() override;
 };

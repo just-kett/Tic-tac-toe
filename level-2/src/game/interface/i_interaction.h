@@ -33,5 +33,7 @@ class I_Interaction {
 
     virtual bool getPlayerMove(int* row, int* col) = 0;
 
+    virtual bool closeWindow() = 0;
+
     virtual void close() = 0;
 };

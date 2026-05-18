@@ -83,8 +83,14 @@ int main(int argc, char* argv[]) {
         Logger::log("Some functions is not implemented. Cleaning up...", Logger::Level::WARNING);
     }
 
-    // đóng tài nguyên nội bộ của engine
-    engine->close();
+    if (config.gui_flag) {
+        if (iInteraction->closeWindow()) {
+            engine->close();
+        }
+    }
+    else {
+        engine->close();
+    }
 
     // giải phóng bộ nhớ engine
     delete engine;

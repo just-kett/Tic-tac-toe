@@ -232,6 +232,12 @@ GameResult Engine::playLoop() {
             iRenderer->showMove(row, col);
         }
 
+        if (config->interactive) {
+            iRenderer->clearScreen();
+            iRenderer->displayBoard(gameSetup.board, gameSetup.size);
+            iRenderer->showPlayer(player, isBotPlayer(player));
+        }
+
         gameResult.turns += 1;
         Logger::log(std::format("player {} make move to ({}, {})", player + 1, row, col), Logger::Level::DEBUG);
 
