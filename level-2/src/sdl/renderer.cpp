@@ -65,6 +65,7 @@ void SDLRenderer::init(const RunConfig &config) {
  
     for (const char* path : fontPaths) {
         font = TTF_OpenFont(path, 100);
+
         if (font) {
             std::cout << "[SDL_ttf] Loaded UI font from: " << path << std::endl;
             break;
@@ -76,6 +77,13 @@ void SDLRenderer::init(const RunConfig &config) {
         if (titleFont) {
             std::cout << "[SDL_ttf] Loaded title font from: " << path << std::endl;
             break;
+        }
+    }
+
+    for (const char* path : fontPaths) {
+        endgameFont = TTF_OpenFont(path, 150);
+        if (endgameFont) {
+            std::cout << "[SDL_ttf] Loaded engame font from: " << path << std::endl;
         }
     }
  
@@ -333,35 +341,104 @@ void SDLRenderer::showPlayer(const int player, const bool is_bot) {}
  
 void SDLRenderer::showResult(const int winner, const bool is_bot, const int size, const char board[][BOARD_N_MAX], const WinLine *winLine) {
 
-    if (!winLine || winLine->cells.empty()) {
-        return;
-    }
-
     displayBoard(board, size, false);
 
-    int boardArea = std::min(screenWidth, screenHeight);
-    int cellSize = boardArea / size;
-    int thickness = std::max(6, cellSize / 18);
-    const SDL_Color HIGH_LIGHT_COLOR = {40, 40, 40, 255};
+    if (winLine && !winLine->cells.empty()) {
 
-    auto firstCell = winLine->cells.front();
-    auto lastCell = winLine->cells.back();
-    Sint16 x1 = firstCell.second * cellSize + cellSize / 2;
-    Sint16 y1 = firstCell.first * cellSize + cellSize / 2;
-    Sint16 x2 = lastCell.second * cellSize + cellSize / 2;
-    Sint16 y2 = lastCell.first * cellSize + cellSize / 2;
+       int boardArea = std::min(screenWidth, screenHeight);
+       int cellSize = boardArea / size;
+       int thickness = std::max(6, cellSize / 18);
+       const SDL_Color HIGH_LIGHT_COLOR = {40, 40, 40, 255};
 
-    thickLineRGBA(renderer, 
-                  x2, 
-                  y2, 
-                  x1, 
-                  y1, 
-                  thickness * 2, 
-                  HIGH_LIGHT_COLOR.r, 
-                  HIGH_LIGHT_COLOR.g, 
-                  HIGH_LIGHT_COLOR.b, 
-                  HIGH_LIGHT_COLOR.a);
+       auto firstCell = winLine->cells.front();
+       auto lastCell = winLine->cells.back();
+       Sint16 x1 = firstCell.second * cellSize + cellSize / 2;
+       Sint16 y1 = firstCell.first * cellSize + cellSize / 2;
+       Sint16 x2 = lastCell.second * cellSize + cellSize / 2;
+       Sint16 y2 = lastCell.first * cellSize + cellSize / 2;
+
+       thickLineRGBA(renderer, 
+                     x2, 
+                     y2, 
+                     x1, 
+                     y1, 
+                     thickness * 2, 
+                     HIGH_LIGHT_COLOR.r, 
+                     HIGH_LIGHT_COLOR.g, 
+                     HIGH_LIGHT_COLOR.b, 
+                     HIGH_LIGHT_COLOR.a);
     
+       renderPresent();
+
+    }
+
+    SDL_Delay(2500);
+    clearScreen();
+    SDL_Rect fullScreenRect = {0, 0, screenWidth, screenHeight};
+    SDL_RenderCopy(renderer, backgroundTexture, NULL, &fullScreenRect);
+    TTF_Font* renderFont = nullptr;
+    renderFont = endgameFont;
+
+    std::string prompt = "";
+
+    switch (winner) {
+        case -1:
+           prompt = "Draw!";
+           break;
+        case 0:
+           prompt = "Player 1 won!";
+           break;
+        case 1:
+           prompt = "Player 2 won!";
+           break;
+        default:
+           break;
+    }
+
+    if (renderFont != nullptr) {
+
+        SDL_Color shadowColor = {250, 250, 250, 255};
+        SDL_Color textColor = {0, 0, 0, 200};
+
+        SDL_Rect fullScreenRect = {0, 0, screenWidth, screenHeight};
+        SDL_RenderCopy(renderer, backgroundTexture, NULL, &fullScreenRect);
+ 
+        std::string cleanPrompt = prompt;
+        cleanPrompt.erase(std::remove(cleanPrompt.begin(), cleanPrompt.end(), '\n'), cleanPrompt.end());
+ 
+        SDL_Surface *shadowSurface = TTF_RenderText_Blended_Wrapped(renderFont, cleanPrompt.c_str(), shadowColor, NULL);
+        SDL_Surface *textSurface = TTF_RenderText_Blended_Wrapped(renderFont, cleanPrompt.c_str(), textColor, NULL);
+        if (shadowSurface != nullptr && textSurface != nullptr)
+        {
+            SDL_Texture *shadowTexture = SDL_CreateTextureFromSurface(renderer, shadowSurface);
+            SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+            if (shadowTexture != nullptr && textTexture != nullptr) {
+                int textX = (screenWidth - textSurface->w) / 2;
+                int textY = (screenHeight - textSurface->h) / 2; 
+                SDL_Rect shadowQuad = {textX + 3, textY + 3, shadowSurface->w, shadowSurface->h};
+                SDL_Rect renderQuad = {textX, textY, textSurface->w, textSurface->h};
+                SDL_RenderCopy(renderer, shadowTexture, NULL, &shadowQuad);
+                SDL_RenderCopy(renderer, textTexture, NULL, &renderQuad);
+                SDL_DestroyTexture(shadowTexture);
+                SDL_DestroyTexture(textTexture);
+            } else {
+                std::cerr << "[SDL_ttf ERROR] Could not create texture. Error: " << SDL_GetError() << std::endl;
+            }
+            SDL_FreeSurface(shadowSurface);
+            SDL_FreeSurface(textSurface);
+        }
+        else
+        {
+            std::cerr << "[SDL_ttf ERROR] " << TTF_GetError() << std::endl;
+            if (shadowSurface) SDL_FreeSurface(shadowSurface);
+            if (textSurface) SDL_FreeSurface(textSurface);
+        }
+    }
+    else
+    {
+        std::cerr << "[SDL_ttf ERROR] Font is nullptr " << std::endl;
+    }
+
     renderPresent();
                 
 }

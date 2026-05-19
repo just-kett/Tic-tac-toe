@@ -21,6 +21,7 @@ class SDLRenderer : public I_Renderer {
     SDL_Renderer* renderer = nullptr; 
     TTF_Font* font = nullptr;
     TTF_Font* titleFont = nullptr;
+    TTF_Font* endgameFont = nullptr;
     SDL_Texture* backgroundTexture = nullptr;
     SDL_Texture* boardTexture = nullptr;
     int screenWidth;
