@@ -145,71 +145,54 @@ bool SDLInteraction::selectGoal(int* goal, const int size) {
 
 bool SDLInteraction::selectGameMode(GameMode* mode) {
 
-    SDL_Event event;
-    while (true) {
-        if (!SDL_WaitEvent(&event)) {
-            continue;
-        }
-        waitForQuit(event);
-        if (event.type != SDL_KEYDOWN) {
-            continue;
-        }
-        SDL_Keycode choice = event.key.keysym.sym;
-        switch(choice) {
-            case SDLK_1: case SDLK_KP_1: 
-                *mode = GameMode::PVP;
-                SDL_Delay(16);
-                return true;
-            case SDLK_KP_2: case SDLK_2:
-                *mode = GameMode::PVE;
-                SDL_Delay(16);
-                return true; 
-            case SDLK_KP_3: case SDLK_3:
-                *mode = GameMode::EVE;
-                SDL_Delay(16);
-                return true;
-            case SDLK_ESCAPE:
-                throw QuitException();
-            default:
-                return false;
-        }
+    int gameMode = getInput();
+
+    if (gameMode < 1 || gameMode > 3) {
+        return false;
+    }
+
+    switch (gameMode) {
+        case 1:
+            *mode = GameMode::PVP;
+            SDL_Delay(16);
+            return true;
+        case 2:
+            *mode = GameMode::PVE;
+            SDL_Delay(16);
+            return true;
+        case 3:
+            *mode = GameMode::EVE;
+            SDL_Delay(16);
+            return true;
+        default:
+            return false;
     }
 
 }
 
 bool SDLInteraction::selectBotLevel(BotLevel* levels, const int index) {
  
-    SDL_Event event;
-    
-    while (true) {
+    int level = getInput();
 
-        if (!SDL_WaitEvent(&event)) {
-            continue;
-        }
-        waitForQuit(event);
-        if (event.type != SDL_KEYDOWN) {
-            continue;
-        }
-
-        SDL_Keycode choice = event.key.keysym.sym;
-        switch (choice) {
-            case SDLK_1: case SDLK_KP_1:
-                levels[index] = BotLevel::EASY;
-                SDL_Delay(16);
-                return true;
-            case SDLK_2: case SDLK_KP_2:
-                levels[index] = BotLevel::MEDIUM;
-                SDL_Delay(16);
-                return true;
-            case SDLK_3: case SDLK_KP_3:
-                levels[index] = BotLevel::HARD;
-                SDL_Delay(16);
-                return true;
-            case SDLK_ESCAPE:
-                throw QuitException();
-            default:
-                return false;
-        }
+    if (level < 1 || level > 3) {
+        return false;
+    }
+       
+    switch (level) {
+        case 1:
+            levels[index] = BotLevel::EASY;
+            SDL_Delay(16);
+            return true;
+        case 2:
+            levels[index] = BotLevel::MEDIUM;
+            SDL_Delay(16);
+            return true;
+        case 3:
+            levels[index] = BotLevel::HARD;
+            SDL_Delay(16);
+            return true;
+        default:
+            return false;
     }
 
 }
@@ -249,8 +232,6 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
             }
         }
     }
-
-    SDL_Delay(16);
 
 }
 

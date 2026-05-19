@@ -372,7 +372,7 @@ void SDLRenderer::showResult(const int winner, const bool is_bot, const int size
 
     }
 
-    SDL_Delay(2500);
+    SDL_Delay(1500);
     clearScreen();
     SDL_Rect fullScreenRect = {0, 0, screenWidth, screenHeight};
     SDL_RenderCopy(renderer, backgroundTexture, NULL, &fullScreenRect);
