@@ -13,30 +13,6 @@
 
 /* ---------- Definitions ---------- */
 
-/**
- * Mô tả:
- *   Parse các tham số dòng lệnh (argc, argv) để tạo ra cấu hình RunConfig.
- *   Hỗ trợ các flag như:
- *   - judge mode
- *   - input file
- *   - log file
- *   - verbose
- *   - GUI
- *   - help
- *
- * Đầu vào:
- *   - argc: số lượng tham số dòng lệnh
- *   - argv: mảng chứa các tham số
- *
- * Đầu ra:
- *   - RunConfig: cấu hình đã được thiết lập dựa trên input
- *
- * Tác dụng phụ:
- *   - Có thể thay đổi nhiều flag trong config tùy theo argument
- *
- * NOTE:
- *   - Nếu bật judge_mode thì sẽ tự động tắt interactive
- */
 RunConfig parseArgs(int argc, char* argv[]) {
     RunConfig config;
 
@@ -83,23 +59,6 @@ RunConfig parseArgs(int argc, char* argv[]) {
     return config;
 }
 
-/**
- * Mô tả:
- *   Overload operator<< để in thông tin RunConfig ra output stream.
- *
- * Đầu vào:
- *   - os: output stream (ví dụ: std::cout)
- *   - config: đối tượng RunConfig cần in
- *
- * Đầu ra:
- *   - std::ostream&: stream sau khi ghi
- *
- * Tác dụng phụ:
- *   - Ghi dữ liệu ra stream
- *
- * NOTE:
- *   - Sử dụng std::boolalpha để in bool dạng true/false thay vì 0/1
- */
 std::ostream& operator<<(std::ostream& os, const RunConfig& config) {
     os << std::boolalpha;  // in bool dưới dạng true/false
     os << "RunConfig {\n"
@@ -115,22 +74,6 @@ std::ostream& operator<<(std::ostream& os, const RunConfig& config) {
     return os;
 }
 
-/**
- * Mô tả:
- *   Chuyển đối tượng RunConfig thành chuỗi string để phục vụ logging/debug.
- *
- * Đầu vào:
- *   - Không có
- *
- * Đầu ra:
- *   - std::string: biểu diễn dạng text của config
- *
- * Tác dụng phụ:
- *   - Không có
- *
- * NOTE:
- *   - Nội dung tương tự operator<< nhưng trả về string
- */
 std::string RunConfig::toString() const {
     std::stringstream ss;
     ss << std::boolalpha;  // in bool dưới dạng true/false
@@ -147,19 +90,6 @@ std::string RunConfig::toString() const {
     return ss.str();
 }
 
-/**
- * Mô tả:
- *   Trả về chuỗi hướng dẫn sử dụng chương trình (help message).
- *
- * Đầu vào:
- *   - Không có
- *
- * Đầu ra:
- *   - std::string: nội dung hướng dẫn
- *
- * Tác dụng phụ:
- *   - Không có
- */
 std::string configHelpStr() {
     std::stringstream ss;
 

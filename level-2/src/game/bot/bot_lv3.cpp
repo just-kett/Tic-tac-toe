@@ -17,29 +17,12 @@
 
 /* ---------- Definitions ---------- */
 
-/**
- * Mô tả:
- *   Constructor của BotLevel3.
- */
 BotLevel3::BotLevel3(const BotLevel& _level, const char& _symbol)
     : BotLevel2(_level, _symbol) {
 }
 
-/**
- * Mô tả:
- *   Destructor của BotLevel3.
- */
-BotLevel3::~BotLevel3() {
-}
+BotLevel3::~BotLevel3() {}
 
-/**
- * Mô tả:
- *   Trả về nước đi của bot HARD.
- *
- * TODO:
- *   - Bước 1: Gọi hard_level để tìm nước đi tối ưu
- *   - Bước 2: Nếu không tìm được → fallback về logic của BotLevel2
- */
 pII BotLevel3::getMove(char board[][BOARD_N_MAX], const int size, const int goal) {
     pII move = hard_level(board, size, goal, symbol, op_symbol);
     if (move.first >= 0 && move.second >= 0 && Logic::isValidMove(board, size, move.first, move.second)) {
@@ -47,21 +30,6 @@ pII BotLevel3::getMove(char board[][BOARD_N_MAX], const int size, const int goal
     }
     return BotLevel2::getMove(board, size, goal);
 }
-
-/**
- * Mô tả:
- *   Logic nâng cao cho bot HARD.
- *   Có thể sử dụng:
- *   - minimax
- *   - alpha-beta pruning
- *   - heuristic scoring
- *
- * TODO:
- *   - Bước 1: Duyệt các nước đi hợp lệ
- *   - Bước 2: Đánh giá từng nước (score)
- *   - Bước 3: Chọn nước có score tốt nhất
- *   - Trường hợp biên: không còn nước đi
- */
 
 std::vector<pII> getMove(char board[][BOARD_N_MAX], const int size) {
     std::vector<std::pair<int, int>> moves;

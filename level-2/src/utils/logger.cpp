@@ -17,31 +17,6 @@
 
 /* ---------- Definitions ---------- */
 
-/**
- * Mô tả:
- *   Khởi tạo logger với các cấu hình:
- *   - judge_mode: điều chỉnh hành vi output
- *   - to_file: có ghi log ra file hay không
- *   - path: đường dẫn file log
- *   - verbose_flag: bật DEBUG level nếu true
- *
- * Đầu vào:
- *   - judge_mode: chế độ chấm (giảm output console)
- *   - to_file: bật/tắt ghi file
- *   - path: file log
- *   - verbose_flag: bật log chi tiết
- *
- * Đầu ra:
- *   - Không có
- *
- * Tác dụng phụ:
- *   - Mở file log
- *   - Ghi header log
- *   - Thiết lập biến global của logger
- *
- * NOTE:
- *   - Nếu không mở được file → fallback về console
- */
 void Logger::init(bool judge_mode, bool to_file, const std::string& path, bool verbose_flag) {
     write_to_file = to_file;
     is_judge_mode = judge_mode;
@@ -78,25 +53,6 @@ void Logger::init(bool judge_mode, bool to_file, const std::string& path, bool v
     }
 }
 
-/**
- * Mô tả:
- *   Ghi một dòng log với format:
- *   [LEVEL] - [YYYY-MM-DD HH:MM:SS] message
- *
- * Đầu vào:
- *   - msg: nội dung log
- *   - level: mức log
- *
- * Đầu ra:
- *   - Không có
- *
- * Tác dụng phụ:
- *   - Ghi ra file hoặc console
- *
- * NOTE:
- *   - Log có level thấp hơn min_level sẽ bị bỏ qua
- *   - Level::MSG sẽ không hiển thị prefix [LEVEL]
- */
 void Logger::log(const std::string& msg, Level level) {
     // lọc log theo level
     if (static_cast<int>(level) < static_cast<int>(min_level)) {
@@ -134,19 +90,6 @@ void Logger::log(const std::string& msg, Level level) {
     }
 }
 
-/**
- * Mô tả:
- *   Đóng logger và giải phóng tài nguyên file.
- *
- * Đầu vào:
- *   - Không có
- *
- * Đầu ra:
- *   - Không có
- *
- * Tác dụng phụ:
- *   - Đóng file log nếu đang mở
- */
 void Logger::close() {
     if (log_file.is_open()) {
         log_file.close();

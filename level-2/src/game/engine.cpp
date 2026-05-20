@@ -1,5 +1,6 @@
 
 #include "engine.h"
+#include "setup.h"
 
 /* ---------- Importing ---------- */
 
@@ -70,4 +71,3 @@ void Engine::close() {
     iInteraction->close();
     Logger::log("Engine closed!");
 }
-
