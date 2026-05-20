@@ -20,7 +20,7 @@
 #include "logic.h"
 
 Engine::Engine(const RunConfig* _config, I_Renderer* _iRenderer, I_Interaction* _iInteraction)
-    : config(_config), iRenderer(_iRenderer), iInteraction(_iInteraction), isRunning(false), currentState(State::TITLE) {
+    : config(_config), iRenderer(_iRenderer), iInteraction(_iInteraction), isRunning(false) {
 }
 
 Engine::~Engine() = default;
@@ -71,8 +71,6 @@ void Engine::startGame() {
     Logic::initBoard(gameSetup.board, gameSetup.size);
     Logger::log("Board initialized!");
     Logger::log("[Engine] Game started!");
-
-    currentState = State::PLAYING;
 }
 
 void Engine::selectSize() {

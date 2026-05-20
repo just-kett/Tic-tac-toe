@@ -9,11 +9,6 @@
 #include "interface/i_renderer.h"
 #include "setup.h"
 
-enum class State {
-    INIT, TITLE, SELECT_SIZE, SELECT_GOAL, SELECT_MODE,
-    SELECT_BOT, PLAYING
-};
-
 class Engine {
    private:
     const RunConfig* config;      
@@ -23,7 +18,6 @@ class Engine {
     GameSetup gameSetup;  
     bool sanity_check();
     bool isRunning;
-    State currentState = State::TITLE;
 
     GameResult playLoop();
     bool isBotPlayer(const int player) const;
