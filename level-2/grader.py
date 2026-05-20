@@ -15,7 +15,7 @@ def run_grader():
     parser.add_argument(
         "--testcase_dir",
         type=str,
-        default="../testcase/",
+        default="./testcase/",
         help="path to testcase directory (default: ../testcase/)"
     )
     args = parser.parse_args()

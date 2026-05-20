@@ -102,11 +102,8 @@ int main(int argc, char* argv[]) {
         if (engine) {
             // khởi tạo engine (setup ban đầu)
             engine->init();
-
-            // vòng đời game
-            engine->startGame();                         // chuẩn bị bắt đầu game
-            GameResult gameResult = engine->playGame();  // chạy game loop chính
-            engine->endGame(gameResult);                 // xử lý sau khi game kết thúc
+            
+            engine->run();
         }
     } catch (const QuitException& e) {
         // NOTE: bắt tín hiệu quit (ví dụ user thoát game giữa chừng)
