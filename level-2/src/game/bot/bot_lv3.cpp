@@ -173,8 +173,6 @@ int minimax(char board[][BOARD_N_MAX], const int size, const int goal, const cha
     }
 }
 
-
-
 pII BotLevel3::hard_level(char board[][BOARD_N_MAX], const int size, const int goal, const char botSymbol, const char playerSymbol) {
     int row = -1;
     int col = -1;

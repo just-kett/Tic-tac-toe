@@ -1,5 +1,4 @@
 
-
 #pragma once
 
 /* ---------- Importing ---------- */
@@ -8,11 +7,8 @@
 #include "interface/i_interaction.h"
 #include "interface/i_renderer.h"
 #include "setup.h"
-
-enum class State {
-    INIT, TITLE, SELECT_SIZE, SELECT_GOAL, SELECT_MODE,
-    SELECT_BOT, PLAYING
-};
+#include "state/game_state.h"
+#include <memory>
 
 class Engine {
    private:
@@ -21,12 +17,11 @@ class Engine {
     I_Interaction* iInteraction; 
 
     GameSetup gameSetup;  
+    GameContext gameContext;
+    
+    std::unique_ptr<IGameState> currentState;
+    
     bool sanity_check();
-    bool isRunning;
-    State currentState = State::TITLE;
-
-    GameResult playLoop();
-    bool isBotPlayer(const int player) const;
 
    public:
     Engine(const RunConfig* _config, I_Renderer* _iRenderer, I_Interaction* _iInteraction);
@@ -34,15 +29,8 @@ class Engine {
 
     void init();
     void close();
+    void run();
 
-    void startGame();
-    void selectSize();
-    void selectGoal();
-    void selectGameMode();
-    void selectBotLevels();
-    GameResult playGame();
-    void endGame(const GameResult& gameResult);
-
-    bool running() { return isRunning; };
+    bool running() const { return gameContext.isRunning; }
     
 };

@@ -10,6 +10,7 @@
 #include <exception>
 #include <random>
 #include <utility>
+#include "../utils/config.h"
 
 /* ---------- Global Variables ---------- */
 
@@ -116,6 +117,24 @@ struct GameResult {
 
     GameResult(int _winner, bool _isBot, int _turns)
         : winner(_winner), isBot(_isBot), turns(_turns) {};
+};
+
+class I_Renderer;
+class I_Interaction;
+
+struct GameContext {
+    GameSetup& gameSetup;
+    const RunConfig& config;
+    I_Renderer& renderer;
+    I_Interaction& interaction;
+    bool isRunning;
+    GameResult gameResult;
+
+    GameContext(GameSetup& _setup, const RunConfig& _config, 
+                I_Renderer& _renderer, I_Interaction& _interaction)
+        : gameSetup(_setup), config(_config), renderer(_renderer), 
+          interaction(_interaction), isRunning(true), 
+          gameResult(DRAW_RESULT, false, 0) {}
 };
 
 class QuitException : public std::exception {

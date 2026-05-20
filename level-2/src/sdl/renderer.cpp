@@ -236,7 +236,8 @@ void SDLRenderer::showInvalidSelect(SelectType selectType, int context) {}
 void SDLRenderer::showValidSelect(SelectType selectType, int context) {}
  
 void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size, bool showWinline) {
-
+    
+    clearScreen();
     currentBoardSize = size;
     SDL_Rect fullScreenRect = {0, 0, screenWidth, screenHeight};
     SDL_RenderCopy(renderer, boardTexture, NULL, &fullScreenRect);
@@ -330,7 +331,6 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size, 
     if (showWinline) {
         renderPresent();
     }
-
 }
 
 void SDLRenderer::showMove(const int row, const int col) {}

@@ -1,0 +1,37 @@
+Tic-tac-toe Game (Version: 0.4.<25023041> by baluong.87)
+------------------------------------------------
+[INFO] - [2026-05-20 17:47:52] Logger initialized!
+[INFO] - [2026-05-20 17:47:52] SDL Renderer initialized!
+[INFO] - [2026-05-20 17:47:52] SDL Interaction initialized!
+[INFO] - [2026-05-20 17:47:52] Infra initialized!
+[INFO] - [2026-05-20 17:47:52] Engine initializing . . .
+[INFO] - [2026-05-20 17:47:52] Engine initialized!
+[INFO] - [2026-05-20 17:47:52] [Engine] Game started!
+[INFO] - [2026-05-20 17:47:52] [Engine] Current state: TITLE
+[INFO] - [2026-05-20 17:47:52] [TitleState] Executing title state
+[INFO] - [2026-05-20 17:47:53] [Engine] Current state: SELECT_SIZE
+[INFO] - [2026-05-20 17:47:53] [SelectSizeState] Executing select size state
+[INFO] - [2026-05-20 17:47:53] [SelectSizeState] Size selected: 3
+[INFO] - [2026-05-20 17:47:53] [Engine] Current state: SELECT_GOAL
+[INFO] - [2026-05-20 17:47:53] [SelectGoalState] Executing select goal state
+[INFO] - [2026-05-20 17:47:54] [SelectGoalState] Goal selected: 3
+[INFO] - [2026-05-20 17:47:54] [Engine] Current state: SELECT_MODE
+[INFO] - [2026-05-20 17:47:54] [SelectModeState] Executing select mode state
+[INFO] - [2026-05-20 17:47:55] [SelectModeState] Mode selected: PVP
+[INFO] - [2026-05-20 17:47:55] [Engine] Current state: SELECT_BOT
+[INFO] - [2026-05-20 17:47:55] [SelectBotState] Executing select bot state
+[INFO] - [2026-05-20 17:47:55] [SelectBotState] PVP mode - no bot selection needed
+[INFO] - [2026-05-20 17:47:55] [SelectBotState] Board initialized!
+[INFO] - [2026-05-20 17:47:55] [Engine] Current state: PLAYING
+[INFO] - [2026-05-20 17:47:55] [PlayingState] Game started!
+[INFO] - [2026-05-20 17:48:04] [PlayingState] Game is a draw!
+[INFO] - [2026-05-20 17:48:04] [PlayingState] Game done!
+[INFO] - [2026-05-20 17:48:04] [Engine] Current state: END_GAME
+[INFO] - [2026-05-20 17:48:04] [EndGameState] Executing end game state
+[INFO] - [2026-05-20 17:48:06] [EndGameState] Game ended!
+[INFO] - [2026-05-20 17:48:06] [Engine] Game finished!
+[INFO] - [2026-05-20 17:48:07] Engine closing . . .
+[INFO] - [2026-05-20 17:48:07] Engine closed!
+[INFO] - [2026-05-20 17:48:07] Engine destroyed!
+[INFO] - [2026-05-20 17:48:07] Infra destroyed!
+[INFO] - [2026-05-20 17:48:07] Logger closing . . .
