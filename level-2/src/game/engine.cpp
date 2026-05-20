@@ -1,6 +1,5 @@
 
 #include "engine.h"
-#include "setup.h"
 
 /* ---------- Importing ---------- */
 
